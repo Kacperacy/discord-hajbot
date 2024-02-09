@@ -1,0 +1,25 @@
+daily streak yo java script    
+    - baza danych użytkowników ile streak/combo daily yo
+        jak ktoś napisze yo sprawdza czy jest w bazie jak nie to dodaje go do bazy
+
+    - top lista (kanał bot ma tylko dostęp)
+    - zapis do pliku -> baza danych
+    - jak liczyć daily? (
+        2:30 od nowa liczy
+            if dzis nie było reset
+                baza danch info: dzis:tak  BOOL(TRUE/FALSE)
+                 if dzis tak + 1
+                 if dzis nie reset()
+    )
+    baza tak będzie wyglądać:
+        nazwa użytkownicy(ID), zapis ile yo(INT), czu dzis(BOOL)?
+
+    CO DODAĆ:
+        ile max miało się yo typu
+            CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, yoCount INTEGER, lastMessageDate INTEGER, todayYo BOOLEAN, maxyo INTEGER)
+
+
+
+powiadomienia o danej h
+
+"PROGRAMING"
