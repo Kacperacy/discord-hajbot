@@ -7,10 +7,10 @@ export const collections: { users?: mongoDB.Collection } = {};
 export async function createUser(discordId: string) {
   await collections.users?.insertOne({
     discordId,
-    yoCount: 1,
-    yoTotal: 1,
-    yoStreak: 1,
-    yoBestStreak: 1,
+    yoCount: 0,
+    yoTotal: 0,
+    yoStreak: 0,
+    yoBestStreak: 0,
     yoBestStreakDate: new Date(),
     yoLastDate: new Date(),
     timeSpent: 0,
