@@ -1,5 +1,6 @@
 import { Client, Message, TextChannel } from "discord.js";
 import { createUser, getUser, updateUser } from "../services/database.service";
+import addExp from "../util/addExp";
 
 const reactions = {
   lewak: "🇵🇱",
@@ -14,6 +15,17 @@ const messages = {
 const yoChannel = "yo";
 const generalChannel = "general";
 const generalPrivChannel = "general-priv";
+
+async function addMessageExp(message: Message): Promise<void> {
+  let user = await getUser(message.author.id);
+  if (user === undefined || user === null) {
+    await createUser(message.author.id);
+    user = await getUser(message.author.id);
+    if (user === undefined || user === null) return;
+  }
+
+  await addExp(user, Math.floor(message.content.length / 2 + 100));
+}
 
 async function updateStreak(userId: string) {
   const user = await getUser(userId);
@@ -49,6 +61,8 @@ export default (client: Client): void => {
       return;
     }
 
+    await addMessageExp(message);
+
     const channel = message.channel as TextChannel;
     if (channel === null) return;
     if (channel.name === null) return;
@@ -59,7 +73,7 @@ export default (client: Client): void => {
 
     if (message.content === "yo") {
       message.react("🦆");
-      if (channelName === yoChannel) updateStreak(message.author.id);
+      if (channelName === yoChannel) await updateStreak(message.author.id);
     }
 
     for (const [key, value] of Object.entries(reactions)) {
