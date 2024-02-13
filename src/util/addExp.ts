@@ -30,10 +30,7 @@ export default async function addExp(
   user: User,
   amount: number
 ): Promise<void> {
-  console.log("addExp", user.discordId, amount, user.level);
-  console.log("requiredExp", await requiredExp(user.level + 1));
   const level = await levelUp(user.exp + amount, user.level);
-  console.log("level", level);
 
   updateUserExp(user.discordId, level.exp, level.level);
 }
