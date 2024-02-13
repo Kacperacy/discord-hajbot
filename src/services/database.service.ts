@@ -13,6 +13,10 @@ export async function createUser(discordId: string) {
     yoBestStreak: 1,
     yoBestStreakDate: new Date(),
     yoLastDate: new Date(),
+    timeSpent: 0,
+    exp: 0,
+    expTotal: 0,
+    level: 0,
   });
 }
 
@@ -50,6 +54,17 @@ export async function updateUserTimeSpent(
   await collections.users?.updateOne(
     { discordId: discordId },
     { $inc: { timeSpent } }
+  );
+}
+
+export async function updateUserExp(
+  discordId: string,
+  exp: number,
+  level: number
+) {
+  await collections.users?.updateOne(
+    { discordId: discordId },
+    { $inc: { expTotal: exp }, $set: { level, exp } }
   );
 }
 

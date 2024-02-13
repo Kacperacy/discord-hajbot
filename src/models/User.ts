@@ -10,4 +10,7 @@ export default interface User {
   yoBestStreakDate: Date;
   yoLastDate: Date;
   timeSpent: Timestamp;
+  exp: number;
+  expTotal: number;
+  level: number;
 }

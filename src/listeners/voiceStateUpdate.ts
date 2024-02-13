@@ -1,5 +1,10 @@
 import { Client } from "discord.js";
-import { updateUserTimeSpent } from "../services/database.service";
+import {
+  createUser,
+  getUser,
+  updateUserTimeSpent,
+} from "../services/database.service";
+import addExp from "../util/addExp";
 
 interface UsersInVoice {
   id: string;
@@ -7,6 +12,20 @@ interface UsersInVoice {
 }
 
 const usersInVoice: UsersInVoice[] = [];
+
+async function addTimeSpentExp(
+  userId: string,
+  timeSpent: number
+): Promise<void> {
+  let user = await getUser(userId);
+  if (user === undefined || user === null) {
+    await createUser(userId);
+    user = await getUser(userId);
+    if (user === undefined || user === null) return;
+  }
+
+  await addExp(user, timeSpent);
+}
 
 export default (client: Client): void => {
   client.on("voiceStateUpdate", (oldState, newState) => {
@@ -31,6 +50,7 @@ export default (client: Client): void => {
           (new Date().getTime() - user.joinedAt.getTime()) / 1000
         );
         updateUserTimeSpent(member.user.id, timeSpent);
+        addTimeSpentExp(member.user.id, timeSpent);
       }
     }
   });
