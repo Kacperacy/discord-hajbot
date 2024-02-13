@@ -1,5 +1,6 @@
 import { updateUser } from "../services/database.service";
 import User from "../models/User";
+import sendMessage from "./sendMessage";
 
 interface UserLevel {
   exp: number;
@@ -31,6 +32,13 @@ export default async function addExp(
   amount: number
 ): Promise<void> {
   const level = await levelUp(user.exp + amount, user.level);
+
+  if (level.level > user.level) {
+    sendMessage(
+      `Pozdro dla ciebie <@${user.discordId}>! Właśnie wbiłeś ${level.level} poziom!`,
+      "1022438140197224500"
+    );
+  }
 
   user.exp = level.exp;
   user.level = level.level;
