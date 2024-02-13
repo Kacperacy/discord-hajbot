@@ -9,6 +9,22 @@ export const YoHighScore: Command = {
   run: async (client: Client, interaction: CommandInteraction) => {
     const users = await getTopCount(10);
 
+    if (users === null || users === undefined) {
+      await interaction.followUp({
+        ephemeral: true,
+        content: "An error has occurred",
+      });
+      return;
+    }
+
+    if (users.length === 0) {
+      await interaction.followUp({
+        ephemeral: true,
+        content: "No users found",
+      });
+      return;
+    }
+
     let content = "Top users with the highest `yo` count:\n";
     for (const [index, user] of users.entries()) {
       let userObj = client.users.cache.get(user.discordId);

@@ -1,5 +1,5 @@
+import { updateUser } from "../services/database.service";
 import User from "../models/User";
-import { updateUserExp } from "../services/database.service";
 
 interface UserLevel {
   exp: number;
@@ -32,5 +32,8 @@ export default async function addExp(
 ): Promise<void> {
   const level = await levelUp(user.exp + amount, user.level);
 
-  updateUserExp(user.discordId, level.exp, level.level);
+  user.exp = level.exp;
+  user.level = level.level;
+
+  updateUser(user);
 }

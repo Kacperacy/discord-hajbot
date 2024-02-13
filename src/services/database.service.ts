@@ -5,67 +5,80 @@ import User from "../models/User";
 export const collections: { users?: mongoDB.Collection } = {};
 
 export async function createUser(discordId: string) {
-  await collections.users?.insertOne({
-    discordId,
-    yoCount: 0,
-    yoTotal: 0,
-    yoStreak: 0,
-    yoBestStreak: 0,
-    yoBestStreakDate: new Date(),
-    yoLastDate: new Date(),
-    timeSpent: 0,
-    exp: 0,
-    expTotal: 0,
-    level: 0,
-  });
+  try {
+    await collections.users?.insertOne({
+      discordId,
+      yoCount: 0,
+      yoTotal: 0,
+      yoStreak: 0,
+      yoBestStreak: 0,
+      yoBestStreakDate: new Date(),
+      yoLastDate: new Date(),
+      timeSpent: 0,
+      exp: 0,
+      expTotal: 0,
+      level: 0,
+    });
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 export async function getUser(discordId: string): Promise<User | undefined> {
-  return (await collections.users?.findOne({ discordId: discordId })) as User;
+  try {
+    let user = (await collections.users?.findOne({
+      discordId: discordId,
+    })) as User;
+
+    if (!user) {
+      await createUser(discordId);
+      return (await collections.users?.findOne({
+        discordId: discordId,
+      })) as User;
+    }
+
+    return user;
+  } catch (err) {
+    console.log(err);
+  }
 }
 
-export async function getTopStreaks(amount: number): Promise<User[]> {
-  return (await collections.users
-    ?.find()
-    .sort({ yoBestStreak: -1 })
-    .limit(amount)
-    .toArray()) as User[];
+export async function getTopStreaks(
+  amount: number
+): Promise<User[] | undefined> {
+  try {
+    return (await collections.users
+      ?.find()
+      .sort({ yoBestStreak: -1 })
+      .limit(amount)
+      .toArray()) as User[];
+  } catch (err) {
+    console.log(err);
+  }
 }
 
-export async function getTopCount(amount: number): Promise<User[]> {
-  return (await collections.users
-    ?.find()
-    .sort({ yoCount: -1 })
-    .limit(amount)
-    .toArray()) as User[];
+export async function getTopCount(amount: number): Promise<User[] | undefined> {
+  try {
+    return (await collections.users
+      ?.find()
+      .sort({ yoCount: -1 })
+      .limit(amount)
+      .toArray()) as User[];
+  } catch (err) {
+    console.log(err);
+  }
 }
 
-export async function updateUser(discordId: string, update: User) {
-  await collections.users?.updateOne(
-    { discordId: discordId },
-    { $set: update }
-  );
-}
-
-export async function updateUserTimeSpent(
-  discordId: string,
-  timeSpent: number
-) {
-  await collections.users?.updateOne(
-    { discordId: discordId },
-    { $inc: { timeSpent } }
-  );
-}
-
-export async function updateUserExp(
-  discordId: string,
-  exp: number,
-  level: number
-) {
-  await collections.users?.updateOne(
-    { discordId: discordId },
-    { $inc: { expTotal: exp }, $set: { level, exp } }
-  );
+export async function updateUser(update: User): Promise<void> {
+  try {
+    await collections.users?.updateOne(
+      { discordId: update.discordId },
+      { $set: update },
+      { upsert: true }
+    );
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 export async function connectToDatabase() {

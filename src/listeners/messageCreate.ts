@@ -1,5 +1,5 @@
 import { Client, Message, TextChannel } from "discord.js";
-import { createUser, getUser, updateUser } from "../services/database.service";
+import { getUser, updateUser } from "../services/database.service";
 import addExp from "../util/addExp";
 
 const reactions = {
@@ -18,41 +18,37 @@ const generalPrivChannel = "general-priv";
 
 async function addMessageExp(message: Message): Promise<void> {
   let user = await getUser(message.author.id);
-  if (user === undefined || user === null) {
-    await createUser(message.author.id);
-    user = await getUser(message.author.id);
-    if (user === undefined || user === null) return;
-  }
+  if (user === null || user === undefined) return;
+  if (user.totalMessages === undefined) user.totalMessages = 0;
+  user.totalMessages += 1;
 
   await addExp(user, Math.floor(message.content.length / 2 + 100));
 }
 
 async function updateStreak(userId: string) {
   const user = await getUser(userId);
-  if (user !== undefined && user !== null) {
-    let nextDay = new Date(user.yoLastDate);
-    nextDay.setDate(nextDay.getDate() + 1);
+  if (user === null || user === undefined) return;
 
-    if (new Date() < nextDay && new Date() > user.yoLastDate) {
-      user.yoTotal += 1;
-      user.yoStreak += 1;
-      if (user.yoStreak > user.yoBestStreak) {
-        user.yoBestStreak = user.yoStreak;
-        user.yoBestStreakDate = new Date();
-      }
-      user.yoLastDate = new Date();
-    } else if (new Date() > nextDay) {
-      user.yoTotal += 1;
-      user.yoStreak = 1;
-      user.yoLastDate = new Date();
+  let nextDay = new Date(user.yoLastDate);
+  nextDay.setDate(nextDay.getDate() + 1);
+
+  if (new Date() < nextDay && new Date() > user.yoLastDate) {
+    user.yoTotal += 1;
+    user.yoStreak += 1;
+    if (user.yoStreak > user.yoBestStreak) {
+      user.yoBestStreak = user.yoStreak;
+      user.yoBestStreakDate = new Date();
     }
-
-    user.yoCount += 1;
-
-    await updateUser(userId, user);
-  } else {
-    await createUser(userId);
+    user.yoLastDate = new Date();
+  } else if (new Date() > nextDay) {
+    user.yoTotal += 1;
+    user.yoStreak = 1;
+    user.yoLastDate = new Date();
   }
+
+  user.yoCount += 1;
+
+  await updateUser(user);
 }
 
 export default (client: Client): void => {
