@@ -1,4 +1,4 @@
-import { ObjectId } from "mongodb";
+import { ObjectId, Timestamp } from "mongodb";
 
 export default interface User {
   _id: ObjectId;
@@ -9,4 +9,5 @@ export default interface User {
   yoBestStreak: number;
   yoBestStreakDate: Date;
   yoLastDate: Date;
+  timeSpent: Timestamp;
 }

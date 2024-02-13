@@ -43,6 +43,16 @@ export async function updateUser(discordId: string, update: User) {
   );
 }
 
+export async function updateUserTimeSpent(
+  discordId: string,
+  timeSpent: number
+) {
+  await collections.users?.updateOne(
+    { discordId: discordId },
+    { $inc: { timeSpent } }
+  );
+}
+
 export async function connectToDatabase() {
   const client: mongoDB.MongoClient = new mongoDB.MongoClient(
     config.DB_CONN_STRING
