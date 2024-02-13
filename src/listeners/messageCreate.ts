@@ -21,13 +21,17 @@ async function updateStreak(userId: string) {
     let nextDay = new Date(user.yoLastDate);
     nextDay.setDate(nextDay.getDate() + 1);
 
-    if (new Date() > nextDay) {
+    if (new Date() < nextDay && new Date() > user.yoLastDate) {
       user.yoTotal += 1;
       user.yoStreak += 1;
       if (user.yoStreak > user.yoBestStreak) {
         user.yoBestStreak = user.yoStreak;
         user.yoBestStreakDate = new Date();
       }
+      user.yoLastDate = new Date();
+    } else if (new Date() > nextDay) {
+      user.yoTotal += 1;
+      user.yoStreak = 1;
       user.yoLastDate = new Date();
     }
 
