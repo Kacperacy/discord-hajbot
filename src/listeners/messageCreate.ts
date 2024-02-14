@@ -1,6 +1,7 @@
 import { Client, Message, TextChannel } from "discord.js";
 import { getUser, updateUser } from "../services/database.service";
-import addExp from "../util/addExp";
+import { ExpManager } from "../managers/ExpManager";
+import { ObjectManager } from "../managers/ObjectManager";
 
 const reactions = {
   lewak: "🇵🇱",
@@ -22,7 +23,11 @@ async function addMessageExp(message: Message): Promise<void> {
   if (user.totalMessages === undefined) user.totalMessages = 0;
   user.totalMessages += 1;
 
-  await addExp(user, Math.floor(message.content.length / 2 + 100));
+  const manager = ObjectManager.getInstance().getObject(
+    ExpManager.name
+  ) as ExpManager;
+
+  await manager.addExp(user, Math.floor(message.content.length / 2 + 100));
 }
 
 async function updateStreak(userId: string) {

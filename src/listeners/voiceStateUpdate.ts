@@ -1,6 +1,7 @@
 import { Client } from "discord.js";
 import { createUser, getUser } from "../services/database.service";
-import addExp from "../util/addExp";
+import { ExpManager } from "../managers/ExpManager";
+import { ObjectManager } from "../managers/ObjectManager";
 
 interface UsersInVoice {
   id: string;
@@ -17,7 +18,11 @@ async function updateUserTimeSpent(
   if (user === null || user === undefined) return;
   user.timeSpent += timeSpent;
 
-  await addExp(user, timeSpent);
+  const manager = ObjectManager.getInstance().getObject(
+    ExpManager.name
+  ) as ExpManager;
+
+  await manager.addExp(user, timeSpent);
 }
 
 export default (client: Client): void => {
