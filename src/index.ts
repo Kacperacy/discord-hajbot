@@ -6,7 +6,8 @@ import interactionCreate from "./listeners/interactionCreate";
 import messageCreate from "./listeners/messageCreate";
 import { connectToDatabase } from "./services/database.service";
 import voiceStateUpdate from "./listeners/voiceStateUpdate";
-import { setClient } from "./util/clientObj";
+import { ExpManager } from "./managers/ExpManager";
+import { MessageManager } from "./managers/MessageManager";
 
 const client = new Client({
   intents: [
@@ -23,6 +24,10 @@ ready(client);
 interactionCreate(client);
 messageCreate(client);
 voiceStateUpdate(client);
-setClient(client);
+
+const objects = {
+  [ExpManager.name]: new ExpManager(),
+  [MessageManager.name]: new MessageManager(client),
+};
 
 client.login(config.TOKEN);
