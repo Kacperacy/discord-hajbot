@@ -36,19 +36,22 @@ async function updateStreak(userId: string) {
 
   const nextDay = new Date(user.yoLastDate);
   nextDay.setDate(nextDay.getDate() + 1);
+  const nextTwoDays = new Date(user.yoLastDate);
+  nextTwoDays.setDate(nextTwoDays.getDate() + 2);
+  const now = new Date();
 
-  if (new Date() < nextDay && new Date() > user.yoLastDate) {
+  if (now < nextTwoDays && now > nextDay) {
     user.yoTotal += 1;
     user.yoStreak += 1;
     if (user.yoStreak > user.yoBestStreak) {
       user.yoBestStreak = user.yoStreak;
-      user.yoBestStreakDate = new Date();
+      user.yoBestStreakDate = now;
     }
-    user.yoLastDate = new Date();
-  } else if (new Date() > nextDay) {
+    user.yoLastDate = now;
+  } else if (now > nextDay) {
     user.yoTotal += 1;
     user.yoStreak = 1;
-    user.yoLastDate = new Date();
+    user.yoLastDate = now;
   }
 
   user.yoCount += 1;
