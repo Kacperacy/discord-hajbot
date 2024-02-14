@@ -13,7 +13,7 @@ export class ExpManager {
   constructor() {
     ObjectManager.getInstance().registerObjectIfNotExists(
       this.constructor.name,
-      this
+      this,
     );
   }
 
@@ -25,7 +25,7 @@ export class ExpManager {
     return { exp, level: currentLevel };
   }
 
-  async isLevelUp(exp: number, currentLevel: number): Promise<Boolean> {
+  async isLevelUp(exp: number, currentLevel: number): Promise<boolean> {
     return (await this.requiredExp(currentLevel + 1)) <= exp;
   }
 
@@ -38,13 +38,13 @@ export class ExpManager {
 
     if (level.level > user.level) {
       const manager = ObjectManager.getInstance().getObject(
-        MessageManager.name
+        MessageManager.name,
       ) as MessageManager;
 
       if (manager)
         manager.sendMessage(
           "1022438140197224500",
-          `Pozdro dla ciebie <@${user.discordId}>! Właśnie wbiłeś ${level.level} poziom!`
+          `Pozdro dla ciebie <@${user.discordId}>! Właśnie wbiłeś ${level.level} poziom!`,
         );
     }
 

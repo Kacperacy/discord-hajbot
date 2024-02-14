@@ -17,7 +17,7 @@ export class ObjectManager {
 
   public registerObjectIfNotExists(
     name: string,
-    object: ManageableObjects
+    object: ManageableObjects,
   ): void {
     if (!this.objects.has(name)) {
       this.objects.set(name, object);

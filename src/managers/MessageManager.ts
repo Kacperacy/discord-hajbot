@@ -8,7 +8,7 @@ export class MessageManager {
     this.client = client;
     ObjectManager.getInstance().registerObjectIfNotExists(
       this.constructor.name,
-      this
+      this,
     );
   }
 

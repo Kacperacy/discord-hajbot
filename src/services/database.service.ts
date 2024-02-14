@@ -26,7 +26,7 @@ export async function createUser(discordId: string) {
 
 export async function getUser(discordId: string): Promise<User | undefined> {
   try {
-    let user = (await collections.users?.findOne({
+    const user = (await collections.users?.findOne({
       discordId: discordId,
     })) as User;
 
@@ -44,7 +44,7 @@ export async function getUser(discordId: string): Promise<User | undefined> {
 }
 
 export async function getTopStreaks(
-  amount: number
+  amount: number,
 ): Promise<User[] | undefined> {
   try {
     return (await collections.users
@@ -74,7 +74,7 @@ export async function updateUser(update: User): Promise<void> {
     await collections.users?.updateOne(
       { discordId: update.discordId },
       { $set: update },
-      { upsert: true }
+      { upsert: true },
     );
   } catch (err) {
     console.log(err);
@@ -83,7 +83,7 @@ export async function updateUser(update: User): Promise<void> {
 
 export async function connectToDatabase() {
   const client: mongoDB.MongoClient = new mongoDB.MongoClient(
-    config.DB_CONN_STRING
+    config.DB_CONN_STRING,
   );
 
   await client.connect();
@@ -91,7 +91,7 @@ export async function connectToDatabase() {
   const db: mongoDB.Db = client.db(config.DB_NAME);
 
   const usersCollection: mongoDB.Collection = db.collection(
-    config.USERS_COLLECTION_NAME
+    config.USERS_COLLECTION_NAME,
   );
 
   collections.users = usersCollection;

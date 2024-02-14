@@ -1,5 +1,5 @@
 import { Client } from "discord.js";
-import { createUser, getUser } from "../services/database.service";
+import { getUser } from "../services/database.service";
 import { ExpManager } from "../managers/ExpManager";
 import { ObjectManager } from "../managers/ObjectManager";
 
@@ -12,14 +12,14 @@ const usersInVoice: UsersInVoice[] = [];
 
 async function updateUserTimeSpent(
   userId: string,
-  timeSpent: number
+  timeSpent: number,
 ): Promise<void> {
-  let user = await getUser(userId);
+  const user = await getUser(userId);
   if (user === null || user === undefined) return;
   user.timeSpent += timeSpent;
 
   const manager = ObjectManager.getInstance().getObject(
-    ExpManager.name
+    ExpManager.name,
   ) as ExpManager;
 
   await manager.addExp(user, timeSpent);
@@ -45,7 +45,7 @@ export default (client: Client): void => {
       const user = usersInVoice.find((u) => u.id === member.user.id);
       if (user) {
         const timeSpent = Math.floor(
-          (new Date().getTime() - user.joinedAt.getTime()) / 1000
+          (new Date().getTime() - user.joinedAt.getTime()) / 1000,
         );
         updateUserTimeSpent(member.user.id, timeSpent);
       }

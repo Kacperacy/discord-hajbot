@@ -18,13 +18,13 @@ const generalChannel = "general";
 const generalPrivChannel = "general-priv";
 
 async function addMessageExp(message: Message): Promise<void> {
-  let user = await getUser(message.author.id);
+  const user = await getUser(message.author.id);
   if (user === null || user === undefined) return;
   if (user.totalMessages === undefined) user.totalMessages = 0;
   user.totalMessages += 1;
 
   const manager = ObjectManager.getInstance().getObject(
-    ExpManager.name
+    ExpManager.name,
   ) as ExpManager;
 
   await manager.addExp(user, Math.floor(message.content.length / 2 + 100));
@@ -34,7 +34,7 @@ async function updateStreak(userId: string) {
   const user = await getUser(userId);
   if (user === null || user === undefined) return;
 
-  let nextDay = new Date(user.yoLastDate);
+  const nextDay = new Date(user.yoLastDate);
   nextDay.setDate(nextDay.getDate() + 1);
 
   if (new Date() < nextDay && new Date() > user.yoLastDate) {
@@ -97,12 +97,12 @@ export default (client: Client): void => {
     }
     if (isGeneralChannel && message.content.includes("sperma")) {
       message.reply(
-        "https://media.discordapp.net/attachments/1020740231156220017/1148697472663830619/cooltext442495480652602.gif"
+        "https://media.discordapp.net/attachments/1020740231156220017/1148697472663830619/cooltext442495480652602.gif",
       );
     }
     if (isGeneralChannel && message.content.includes("bagno")) {
       message.reply(
-        "https://cdn.discordapp.com/attachments/1020740231156220017/1190031310207598703/LOL.gif"
+        "https://cdn.discordapp.com/attachments/1020740231156220017/1190031310207598703/LOL.gif",
       );
     }
   });

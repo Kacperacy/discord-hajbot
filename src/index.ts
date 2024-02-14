@@ -25,9 +25,7 @@ interactionCreate(client);
 messageCreate(client);
 voiceStateUpdate(client);
 
-const objects = {
-  [ExpManager.name]: new ExpManager(),
-  [MessageManager.name]: new MessageManager(client),
-};
+new ExpManager();
+new MessageManager(client);
 
 client.login(config.TOKEN);
