@@ -1,6 +1,7 @@
 import * as mongoDB from "mongodb";
 import config from "../config";
 import User from "../models/User";
+import { Logger } from "../Logger";
 
 export const collections: { users?: mongoDB.Collection } = {};
 
@@ -20,7 +21,10 @@ export async function createUser(discordId: string) {
       level: 0,
     });
   } catch (err) {
-    console.log(err);
+    Logger.getInstance().error(
+      `Error creating user with discordId: ${discordId}`,
+      err,
+    );
   }
 }
 
@@ -39,7 +43,10 @@ export async function getUser(discordId: string): Promise<User | undefined> {
 
     return user;
   } catch (err) {
-    console.log(err);
+    Logger.getInstance().error(
+      `Error getting user with discordId: ${discordId}`,
+      err,
+    );
   }
 }
 
@@ -53,7 +60,7 @@ export async function getTopStreaks(
       .limit(amount)
       .toArray()) as User[];
   } catch (err) {
-    console.log(err);
+    Logger.getInstance().error("Error getting top streaks", err);
   }
 }
 
@@ -65,7 +72,7 @@ export async function getTopCount(amount: number): Promise<User[] | undefined> {
       .limit(amount)
       .toArray()) as User[];
   } catch (err) {
-    console.log(err);
+    Logger.getInstance().error("Error getting top count", err);
   }
 }
 
@@ -77,22 +84,26 @@ export async function updateUser(update: User): Promise<void> {
       { upsert: true },
     );
   } catch (err) {
-    console.log(err);
+    Logger.getInstance().error("Error updating user", err);
   }
 }
 
 export async function connectToDatabase() {
-  const client: mongoDB.MongoClient = new mongoDB.MongoClient(
-    config.DB_CONN_STRING,
-  );
+  try {
+    const client: mongoDB.MongoClient = new mongoDB.MongoClient(
+      config.DB_CONN_STRING,
+    );
 
-  await client.connect();
+    await client.connect();
 
-  const db: mongoDB.Db = client.db(config.DB_NAME);
+    const db: mongoDB.Db = client.db(config.DB_NAME);
 
-  const usersCollection: mongoDB.Collection = db.collection(
-    config.USERS_COLLECTION_NAME,
-  );
+    const usersCollection: mongoDB.Collection = db.collection(
+      config.USERS_COLLECTION_NAME,
+    );
 
-  collections.users = usersCollection;
+    collections.users = usersCollection;
+  } catch (err) {
+    Logger.getInstance().error("Error connecting to database", err);
+  }
 }
