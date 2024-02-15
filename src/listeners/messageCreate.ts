@@ -17,8 +17,11 @@ const yoChannel = "yo";
 const generalChannel = "general";
 const generalPrivChannel = "general-priv";
 
-async function addMessageExp(message: Message): Promise<void> {
-  const user = await MongoDBClient.getInstance().getUser(message.author.id);
+async function addMessageExp(guildId: string, message: Message): Promise<void> {
+  const user = await MongoDBClient.getInstance().getUser(
+    guildId,
+    message.author.id,
+  );
   if (user === null || user === undefined) return;
   if (user.totalMessages === undefined) user.totalMessages = 0;
   user.totalMessages += 1;
@@ -27,11 +30,15 @@ async function addMessageExp(message: Message): Promise<void> {
     ExpManager.name,
   ) as ExpManager;
 
-  await manager.addExp(user, Math.floor(message.content.length / 2 + 100));
+  await manager.addExp(
+    guildId,
+    user,
+    Math.floor(message.content.length / 2 + 100),
+  );
 }
 
-async function updateStreak(userId: string) {
-  const user = await MongoDBClient.getInstance().getUser(userId);
+async function updateStreak(guildId: string, userId: string) {
+  const user = await MongoDBClient.getInstance().getUser(guildId, userId);
   if (user === null || user === undefined) return;
 
   const nextDay = new Date(user.yoLastDate);
@@ -56,16 +63,16 @@ async function updateStreak(userId: string) {
 
   user.yoCount += 1;
 
-  await MongoDBClient.getInstance().updateUser(user);
+  await MongoDBClient.getInstance().updateUser(guildId, user);
 }
 
 export default (client: Client): void => {
-  client.on("messageCreate", async (message) => {
+  client.on("messageCreate", async (message): Promise<void> => {
     if (!client.user || !client.application || message.author.bot) {
       return;
     }
 
-    await addMessageExp(message);
+    if (message.guildId !== null) await addMessageExp(message.guildId, message);
 
     const channel = message.channel as TextChannel;
     if (channel === null) return;
@@ -77,7 +84,8 @@ export default (client: Client): void => {
 
     if (message.content === "yo") {
       message.react("🦆");
-      if (channelName === yoChannel) await updateStreak(message.author.id);
+      if (channelName === yoChannel && message.guildId !== null)
+        await updateStreak(message.guildId, message.author.id);
     }
 
     for (const [key, value] of Object.entries(reactions)) {

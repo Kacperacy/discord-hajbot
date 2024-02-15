@@ -14,6 +14,11 @@ export class MongoDBClient {
   }
 
   constructor() {
+    if (!config.DB_CONN_STRING) {
+      Logger.getInstance().error("DB_CONN_STRING not found in config");
+      throw new Error("DB_CONN_STRING not found in config");
+    }
+
     this.client = new MongoClient(config.DB_CONN_STRING, {
       serverApi: {
         version: ServerApiVersion.v1,
@@ -22,11 +27,9 @@ export class MongoDBClient {
     });
   }
 
-  public async createUser(discordId: string) {
+  public async createUser(guildId: string, discordId: string) {
     try {
-      const users = this.client
-        .db(config.DB_NAME)
-        .collection(config.USERS_COLLECTION_NAME);
+      const users = this.client.db(config.USERS_DB_NAME).collection(guildId);
 
       await users?.insertOne({
         discordId,
@@ -49,18 +52,19 @@ export class MongoDBClient {
     }
   }
 
-  public async getUser(discordId: string): Promise<User | undefined> {
+  public async getUser(
+    guildId: string,
+    discordId: string,
+  ): Promise<User | undefined> {
     try {
-      const users = this.client
-        .db(config.DB_NAME)
-        .collection(config.USERS_COLLECTION_NAME);
+      const users = this.client.db(config.USERS_DB_NAME).collection(guildId);
 
       const user = (await users?.findOne({
         discordId: discordId,
       })) as User;
 
       if (!user) {
-        await this.createUser(discordId);
+        await this.createUser(guildId, discordId);
         return (await users?.findOne({
           discordId: discordId,
         })) as User;
@@ -75,11 +79,12 @@ export class MongoDBClient {
     }
   }
 
-  public async getTopStreaks(amount: number): Promise<User[] | undefined> {
+  public async getTopStreaks(
+    guildId: string,
+    amount: number,
+  ): Promise<User[] | undefined> {
     try {
-      const users = this.client
-        .db(config.DB_NAME)
-        .collection(config.USERS_COLLECTION_NAME);
+      const users = this.client.db(config.USERS_DB_NAME).collection(guildId);
 
       return (await users
         ?.find()
@@ -91,11 +96,12 @@ export class MongoDBClient {
     }
   }
 
-  public async getTopCount(amount: number): Promise<User[] | undefined> {
+  public async getTopCount(
+    guildId: string,
+    amount: number,
+  ): Promise<User[] | undefined> {
     try {
-      const users = this.client
-        .db(config.DB_NAME)
-        .collection(config.USERS_COLLECTION_NAME);
+      const users = this.client.db(config.USERS_DB_NAME).collection(guildId);
 
       return (await users
         ?.find()
@@ -107,11 +113,9 @@ export class MongoDBClient {
     }
   }
 
-  public async updateUser(update: User): Promise<void> {
+  public async updateUser(guildId: string, update: User): Promise<void> {
     try {
-      const users = this.client
-        .db(config.DB_NAME)
-        .collection(config.USERS_COLLECTION_NAME);
+      const users = this.client.db(config.USERS_DB_NAME).collection(guildId);
 
       await users?.updateOne(
         { discordId: update.discordId },

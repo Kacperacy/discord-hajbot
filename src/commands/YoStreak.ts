@@ -7,7 +7,11 @@ export const YoStreak: Command = {
   description: "Returns table with top 10 users with the highest streaks.",
   type: ApplicationCommandType.ChatInput,
   run: async (client: Client, interaction: CommandInteraction) => {
-    const users = await MongoDBClient.getInstance().getTopStreaks(10);
+    if (!interaction.guildId) return;
+    const users = await MongoDBClient.getInstance().getTopStreaks(
+      interaction.guildId,
+      10,
+    );
 
     if (users === null || users === undefined) {
       await interaction.followUp({

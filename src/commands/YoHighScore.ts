@@ -7,7 +7,11 @@ export const YoHighScore: Command = {
   description: "Returns a greeting",
   type: ApplicationCommandType.ChatInput,
   run: async (client: Client, interaction: CommandInteraction) => {
-    const users = await MongoDBClient.getInstance().getTopCount(10);
+    if (!interaction.guildId) return;
+    const users = await MongoDBClient.getInstance().getTopCount(
+      interaction.guildId,
+      10,
+    );
 
     if (users === null || users === undefined) {
       await interaction.followUp({
