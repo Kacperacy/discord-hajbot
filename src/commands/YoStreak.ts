@@ -1,13 +1,13 @@
 import { CommandInteraction, Client, ApplicationCommandType } from "discord.js";
 import { Command } from "../Command";
-import { getTopStreaks } from "../services/database.service";
+import { MongoDBClient } from "../MongoDBClient";
 
 export const YoStreak: Command = {
   name: "yo-streak",
   description: "Returns table with top 10 users with the highest streaks.",
   type: ApplicationCommandType.ChatInput,
   run: async (client: Client, interaction: CommandInteraction) => {
-    const users = await getTopStreaks(10);
+    const users = await MongoDBClient.getInstance().getTopStreaks(10);
 
     if (users === null || users === undefined) {
       await interaction.followUp({

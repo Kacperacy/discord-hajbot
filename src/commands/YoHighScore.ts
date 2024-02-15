@@ -1,13 +1,13 @@
 import { CommandInteraction, Client, ApplicationCommandType } from "discord.js";
 import { Command } from "../Command";
-import { getTopCount } from "../services/database.service";
+import { MongoDBClient } from "../MongoDBClient";
 
 export const YoHighScore: Command = {
   name: "yo-high-score",
   description: "Returns a greeting",
   type: ApplicationCommandType.ChatInput,
   run: async (client: Client, interaction: CommandInteraction) => {
-    const users = await getTopCount(10);
+    const users = await MongoDBClient.getInstance().getTopCount(10);
 
     if (users === null || users === undefined) {
       await interaction.followUp({

@@ -1,8 +1,8 @@
-import { updateUser } from "../services/database.service";
 import User from "../models/User";
 import { MessageManager } from "./MessageManager";
 import { ObjectManager } from "./ObjectManager";
 import getBaseLog from "../util/getBaseLog";
+import { MongoDBClient } from "../MongoDBClient";
 
 interface UserLevel {
   exp: number;
@@ -51,6 +51,6 @@ export class ExpManager {
     user.exp = level.exp;
     user.level = level.level;
 
-    updateUser(user);
+    MongoDBClient.getInstance().updateUser(user);
   }
 }
