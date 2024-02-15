@@ -11,10 +11,11 @@ interface UsersInVoice {
 const usersInVoice: UsersInVoice[] = [];
 
 async function updateUserTimeSpent(
+  guildId: string,
   userId: string,
   timeSpent: number,
 ): Promise<void> {
-  const user = await MongoDBClient.getInstance().getUser(userId);
+  const user = await MongoDBClient.getInstance().getUser(guildId, userId);
   if (user === null || user === undefined) return;
   user.timeSpent += timeSpent;
 
@@ -22,7 +23,7 @@ async function updateUserTimeSpent(
     ExpManager.name,
   ) as ExpManager;
 
-  await manager.addExp(user, timeSpent);
+  await manager.addExp(guildId, user, timeSpent);
 }
 
 export default (client: Client): void => {
@@ -47,7 +48,7 @@ export default (client: Client): void => {
         const timeSpent = Math.floor(
           (new Date().getTime() - user.joinedAt.getTime()) / 1000,
         );
-        updateUserTimeSpent(member.user.id, timeSpent);
+        updateUserTimeSpent(member.guild.id, member.user.id, timeSpent);
       }
     }
   });

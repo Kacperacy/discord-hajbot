@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+import { Logger } from "./Logger";
 
 dotenv.config();
 
@@ -7,8 +8,8 @@ const {
   CLIENT_ID,
   PREFIX,
   DB_CONN_STRING,
-  DB_NAME,
-  USERS_COLLECTION_NAME,
+  USERS_DB_NAME,
+  GUILDS_DB_NAME,
 } = process.env;
 
 if (
@@ -16,10 +17,11 @@ if (
   !CLIENT_ID ||
   !PREFIX ||
   !DB_CONN_STRING ||
-  !DB_NAME ||
-  !USERS_COLLECTION_NAME
+  !USERS_DB_NAME ||
+  !GUILDS_DB_NAME
 ) {
-  throw new Error("Missing environment variables");
+  Logger.getInstance().error("Missing environment variables");
+  Error("Missing environment variables");
 }
 
 export default {
@@ -27,6 +29,6 @@ export default {
   CLIENT_ID,
   PREFIX,
   DB_CONN_STRING,
-  DB_NAME,
-  USERS_COLLECTION_NAME,
+  USERS_DB_NAME,
+  GUILDS_DB_NAME,
 };

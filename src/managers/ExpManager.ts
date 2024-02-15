@@ -33,7 +33,11 @@ export class ExpManager {
     return Math.floor(level * (await getBaseLog(5, level)) * 1000 + 1000);
   }
 
-  public async addExp(user: User, amount: number): Promise<void> {
+  public async addExp(
+    guildId: string,
+    user: User,
+    amount: number,
+  ): Promise<void> {
     const level = await this.levelUp(user.exp + amount, user.level);
 
     if (level.level > user.level) {
@@ -51,6 +55,6 @@ export class ExpManager {
     user.exp = level.exp;
     user.level = level.level;
 
-    MongoDBClient.getInstance().updateUser(user);
+    MongoDBClient.getInstance().updateUser(guildId, user);
   }
 }
