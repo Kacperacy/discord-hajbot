@@ -54,6 +54,7 @@ export class ExpManager {
 
     user.exp = level.exp;
     user.level = level.level;
+    user.expTotal += amount;
 
     MongoDBClient.getInstance().updateUser(guildId, user);
   }
