@@ -1,7 +1,7 @@
 import { Client } from "discord.js";
-import { getUser } from "../services/database.service";
 import { ExpManager } from "../managers/ExpManager";
 import { ObjectManager } from "../managers/ObjectManager";
+import { MongoDBClient } from "../MongoDBClient";
 
 interface UsersInVoice {
   id: string;
@@ -14,7 +14,7 @@ async function updateUserTimeSpent(
   userId: string,
   timeSpent: number,
 ): Promise<void> {
-  const user = await getUser(userId);
+  const user = await MongoDBClient.getInstance().getUser(userId);
   if (user === null || user === undefined) return;
   user.timeSpent += timeSpent;
 

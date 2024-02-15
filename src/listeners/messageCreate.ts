@@ -1,7 +1,7 @@
 import { Client, Message, TextChannel } from "discord.js";
-import { getUser, updateUser } from "../services/database.service";
 import { ExpManager } from "../managers/ExpManager";
 import { ObjectManager } from "../managers/ObjectManager";
+import { MongoDBClient } from "../MongoDBClient";
 
 const reactions = {
   lewak: "🇵🇱",
@@ -18,7 +18,7 @@ const generalChannel = "general";
 const generalPrivChannel = "general-priv";
 
 async function addMessageExp(message: Message): Promise<void> {
-  const user = await getUser(message.author.id);
+  const user = await MongoDBClient.getInstance().getUser(message.author.id);
   if (user === null || user === undefined) return;
   if (user.totalMessages === undefined) user.totalMessages = 0;
   user.totalMessages += 1;
@@ -31,7 +31,7 @@ async function addMessageExp(message: Message): Promise<void> {
 }
 
 async function updateStreak(userId: string) {
-  const user = await getUser(userId);
+  const user = await MongoDBClient.getInstance().getUser(userId);
   if (user === null || user === undefined) return;
 
   const nextDay = new Date(user.yoLastDate);
@@ -56,7 +56,7 @@ async function updateStreak(userId: string) {
 
   user.yoCount += 1;
 
-  await updateUser(user);
+  await MongoDBClient.getInstance().updateUser(user);
 }
 
 export default (client: Client): void => {
