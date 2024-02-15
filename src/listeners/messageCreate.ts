@@ -40,7 +40,6 @@ async function addMessageExp(guildId: string, message: Message): Promise<void> {
 async function updateStreak(guildId: string, userId: string) {
   const user = await MongoDBClient.getInstance().getUser(guildId, userId);
   if (user === null || user === undefined) return;
-
   const nextDay = new Date(user.yoLastDate);
   nextDay.setDate(nextDay.getDate() + 1);
   const nextTwoDays = new Date(user.yoLastDate);
@@ -50,15 +49,16 @@ async function updateStreak(guildId: string, userId: string) {
   if (now < nextTwoDays && now > nextDay) {
     user.yoTotal += 1;
     user.yoStreak += 1;
-    if (user.yoStreak > user.yoBestStreak) {
-      user.yoBestStreak = user.yoStreak;
-      user.yoBestStreakDate = now;
-    }
     user.yoLastDate = now;
   } else if (now > nextDay) {
     user.yoTotal += 1;
     user.yoStreak = 1;
     user.yoLastDate = now;
+  }
+
+  if (user.yoStreak > user.yoBestStreak) {
+    user.yoBestStreak = user.yoStreak;
+    user.yoBestStreakDate = now;
   }
 
   user.yoCount += 1;
