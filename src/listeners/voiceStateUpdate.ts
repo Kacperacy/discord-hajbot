@@ -1,7 +1,7 @@
 import { Client } from "discord.js";
 import { ExpManager } from "../managers/ExpManager";
 import { ObjectManager } from "../managers/ObjectManager";
-import { MongoDBClient } from "../MongoDBClient";
+import { MongoDBClient } from "../clients/MongoDBClient";
 
 interface UsersInVoice {
   id: string;

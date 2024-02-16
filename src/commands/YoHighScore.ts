@@ -1,6 +1,6 @@
 import { CommandInteraction, Client, ApplicationCommandType } from "discord.js";
 import { Command } from "../Command";
-import { MongoDBClient } from "../MongoDBClient";
+import { MongoDBClient } from "../clients/MongoDBClient";
 
 export const YoHighScore: Command = {
   name: "yo-high-score",

@@ -1,7 +1,8 @@
 import { MongoClient, ServerApiVersion } from "mongodb";
-import config from "./config";
-import { Logger } from "./Logger";
-import User from "./models/User";
+import config from "../config";
+import { Logger } from "../util/Logger";
+import User from "../types/User";
+import ServerSettings from "../types/ServerSettings";
 
 export class MongoDBClient {
   private client: MongoClient;
@@ -124,6 +125,66 @@ export class MongoDBClient {
       );
     } catch (err) {
       Logger.getInstance().error("Error updating user", err);
+    }
+  }
+
+  public async createServerSettings(
+    serverSettings: ServerSettings,
+  ): Promise<void> {
+    try {
+      if (config.SETTINGS_COLLECTION_NAME === undefined)
+        throw new Error("settingsCollectionName is undefined");
+
+      const settings = this.client
+        .db(config.SETTINGS_DB_NAME)
+        .collection(config.SETTINGS_COLLECTION_NAME);
+
+      await settings?.insertOne({
+        serverSettings,
+      });
+    } catch (err) {
+      Logger.getInstance().error("Error adding server settings", err);
+    }
+  }
+
+  public async getServerSettings(
+    guildId: string,
+  ): Promise<ServerSettings | null> {
+    try {
+      if (config.SETTINGS_COLLECTION_NAME === undefined)
+        throw new Error("settingsCollectionName is undefined");
+
+      const settings = this.client
+        .db(config.SETTINGS_DB_NAME)
+        .collection(config.SETTINGS_COLLECTION_NAME);
+
+      return (await settings?.findOne({
+        guildId: guildId,
+      })) as ServerSettings;
+    } catch (err) {
+      Logger.getInstance().error("Error getting server settings", err);
+      return null;
+    }
+  }
+
+  public async upsertServerSettings(
+    serverSettings: ServerSettings,
+  ): Promise<void> {
+    try {
+      if (config.SETTINGS_COLLECTION_NAME === undefined)
+        throw new Error("settingsCollectionName is undefined");
+
+      const settings = this.client
+        .db(config.SETTINGS_DB_NAME)
+        .collection(config.SETTINGS_COLLECTION_NAME);
+
+      await settings?.updateOne(
+        { guildId: serverSettings.guildId },
+        { $set: serverSettings },
+        { upsert: true },
+      );
+    } catch (err) {
+      Logger.getInstance().error("Error updating server settings", err);
     }
   }
 }
