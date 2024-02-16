@@ -1,8 +1,8 @@
-import User from "../models/User";
+import User from "../types/User";
 import { MessageManager } from "./MessageManager";
 import { ObjectManager } from "./ObjectManager";
 import getBaseLog from "../util/getBaseLog";
-import { MongoDBClient } from "../MongoDBClient";
+import { MongoDBClient } from "../clients/MongoDBClient";
 
 interface UserLevel {
   exp: number;
@@ -46,8 +46,8 @@ export class ExpManager {
       ) as MessageManager;
 
       if (manager)
-        manager.sendMessage(
-          "1022438140197224500",
+        manager.sendMessageDefaultChannel(
+          guildId,
           `Pozdro dla ciebie <@${user.discordId}>! Właśnie wbiłeś ${level.level} poziom!`,
         );
     }

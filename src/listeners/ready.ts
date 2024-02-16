@@ -1,6 +1,6 @@
 import { Client } from "discord.js";
 import { Commands } from "../Commands";
-import { Logger } from "../Logger";
+import { Logger } from "../util/Logger";
 
 export default (client: Client): void => {
   client.on("ready", async () => {
