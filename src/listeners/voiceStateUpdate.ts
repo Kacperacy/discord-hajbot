@@ -49,6 +49,7 @@ export default (client: Client): void => {
           (new Date().getTime() - user.joinedAt.getTime()) / 1000,
         );
         updateUserTimeSpent(member.guild.id, member.user.id, timeSpent);
+        usersInVoice.splice(usersInVoice.indexOf(user), 1);
       }
     }
   });
