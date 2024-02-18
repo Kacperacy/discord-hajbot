@@ -46,7 +46,7 @@ export class ExpManager {
       ) as MessageManager;
 
       if (manager)
-        manager.sendMessageDefaultChannel(
+        manager.sendLevelUpMessage(
           guildId,
           `Pozdro dla ciebie <@${user.discordId}>! Właśnie wbiłeś ${level.level} poziom!`,
         );

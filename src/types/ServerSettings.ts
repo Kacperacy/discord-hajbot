@@ -4,4 +4,5 @@ export default interface ServerSettings {
   _id: ObjectId;
   guildId: string;
   botChannelId: string;
+  sendLevelUpMessage: boolean;
 }
