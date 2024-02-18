@@ -27,7 +27,7 @@ export class MessageManager {
   ): Promise<void> {
     const channelId = (
       await MongoDBClient.getInstance().getServerSettings(guildId)
-    )?.guildId;
+    )?.botChannelId;
     if (channelId === null || channelId === undefined) return;
 
     const channel = (await this.client.channels.fetch(channelId)) as Channel;
