@@ -128,9 +128,7 @@ export class MongoDBClient {
     }
   }
 
-  public async createServerSettings(
-    serverSettings: ServerSettings,
-  ): Promise<void> {
+  public async createServerSettings(guildId: string): Promise<void> {
     try {
       if (config.SETTINGS_COLLECTION_NAME === undefined)
         throw new Error("settingsCollectionName is undefined");
@@ -140,7 +138,9 @@ export class MongoDBClient {
         .collection(config.SETTINGS_COLLECTION_NAME);
 
       await settings?.insertOne({
-        serverSettings,
+        guildId,
+        botChannelId: "",
+        sendLevelUpMessage: true,
       });
     } catch (err) {
       Logger.getInstance().error("Error adding server settings", err);

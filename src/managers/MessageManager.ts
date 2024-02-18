@@ -21,13 +21,18 @@ export class MessageManager {
     }
   }
 
-  public async sendMessageDefaultChannel(
+  public async sendLevelUpMessage(
     guildId: string,
     content: string,
   ): Promise<void> {
-    const channelId = (
-      await MongoDBClient.getInstance().getServerSettings(guildId)
-    )?.botChannelId;
+    const settings =
+      await MongoDBClient.getInstance().getServerSettings(guildId);
+
+    if (!settings) return;
+    if (!settings.sendLevelUpMessage) return;
+
+    const channelId = settings.botChannelId;
+
     if (channelId === null || channelId === undefined) return;
 
     const channel = (await this.client.channels.fetch(channelId)) as Channel;
