@@ -3,7 +3,7 @@ import { Command } from "../Command";
 import { MongoDBClient } from "../clients/MongoDBClient";
 
 export const YoHighScore: Command = {
-  name: "yo-high-score",
+  name: "yo high score",
   description: "Returns a greeting",
   type: ApplicationCommandType.ChatInput,
   run: async (client: Client, interaction: CommandInteraction) => {

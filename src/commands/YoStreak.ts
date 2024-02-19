@@ -3,7 +3,7 @@ import { Command } from "../Command";
 import { MongoDBClient } from "../clients/MongoDBClient";
 
 export const YoStreak: Command = {
-  name: "yo-streak",
+  name: "yo streak",
   description: "Returns table with top 10 users with the highest streaks.",
   type: ApplicationCommandType.ChatInput,
   run: async (client: Client, interaction: CommandInteraction) => {

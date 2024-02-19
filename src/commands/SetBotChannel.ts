@@ -9,7 +9,7 @@ import { MongoDBClient } from "../clients/MongoDBClient";
 import ServerSettings from "../types/ServerSettings";
 
 export const SetBotChannel: Command = {
-  name: "setbotchannel",
+  name: "set bot channel",
   description: "Sets the bot channel to the current channel.",
   type: ApplicationCommandType.ChatInput,
   run: async (client: Client, interaction: CommandInteraction) => {
