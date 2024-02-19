@@ -9,7 +9,7 @@ import { MongoDBClient } from "../clients/MongoDBClient";
 import ServerSettings from "../types/ServerSettings";
 
 export const SendLevelUp: Command = {
-  name: "set send level up",
+  name: "sendlevelup",
   description: "Turn on or off the level up message",
   options: [
     {
