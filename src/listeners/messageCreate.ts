@@ -2,6 +2,7 @@ import { Client, Message, TextChannel } from "discord.js";
 import { ExpManager } from "../managers/ExpManager";
 import { ObjectManager } from "../managers/ObjectManager";
 import { MongoDBClient } from "../clients/MongoDBClient";
+import { defaultUser } from "../types/User";
 
 const reactions = {
   lewak: "🇵🇱",
@@ -18,13 +19,19 @@ const generalChannel = "general";
 const generalPrivChannel = "general-priv";
 
 async function addMessageExp(guildId: string, message: Message): Promise<void> {
-  const user = await MongoDBClient.getInstance().getUser(
+  let user = await MongoDBClient.getInstance().getUser(
     guildId,
     message.author.id,
   );
-  if (user === null || user === undefined) return;
-  if (user.totalMessages === undefined) user.totalMessages = 0;
-  user.totalMessages += 1;
+  if (user === null || user === undefined) {
+    user = { ...defaultUser };
+    user.totalMessages = 1;
+    user.discordId = message.author.id;
+    await MongoDBClient.getInstance().upsertUser(guildId, user);
+  } else {
+    if (user.totalMessages === undefined) user.totalMessages = 0;
+    user.totalMessages += 1;
+  }
 
   const manager = ObjectManager.getInstance().getObject(
     ExpManager.name,
@@ -38,8 +45,11 @@ async function addMessageExp(guildId: string, message: Message): Promise<void> {
 }
 
 async function updateStreak(guildId: string, userId: string) {
-  const user = await MongoDBClient.getInstance().getUser(guildId, userId);
-  if (user === null || user === undefined) return;
+  let user = await MongoDBClient.getInstance().getUser(guildId, userId);
+  if (user === null || user === undefined) {
+    user = { ...defaultUser };
+    await MongoDBClient.getInstance().upsertUser(guildId, user);
+  }
   const nextDay = new Date(user.yoLastDate);
   nextDay.setDate(nextDay.getDate() + 1);
   const nextTwoDays = new Date(user.yoLastDate);
@@ -63,7 +73,7 @@ async function updateStreak(guildId: string, userId: string) {
 
   user.yoCount += 1;
 
-  await MongoDBClient.getInstance().updateUser(guildId, user);
+  await MongoDBClient.getInstance().upsertUser(guildId, user);
 }
 
 export default (client: Client): void => {

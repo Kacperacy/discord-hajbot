@@ -28,31 +28,6 @@ export class MongoDBClient {
     });
   }
 
-  public async createUser(guildId: string, discordId: string) {
-    try {
-      const users = this.client.db(config.USERS_DB_NAME).collection(guildId);
-
-      await users?.insertOne({
-        discordId,
-        yoCount: 0,
-        yoTotal: 0,
-        yoStreak: 0,
-        yoBestStreak: 0,
-        yoBestStreakDate: new Date(0),
-        yoLastDate: new Date(0),
-        timeSpent: 0,
-        exp: 0,
-        expTotal: 0,
-        level: 0,
-      });
-    } catch (err) {
-      Logger.getInstance().error(
-        `Error creating user with discordId: ${discordId}`,
-        err,
-      );
-    }
-  }
-
   public async getUser(
     guildId: string,
     discordId: string,
@@ -60,18 +35,9 @@ export class MongoDBClient {
     try {
       const users = this.client.db(config.USERS_DB_NAME).collection(guildId);
 
-      const user = (await users?.findOne({
+      return (await users?.findOne({
         discordId: discordId,
       })) as User;
-
-      if (!user) {
-        await this.createUser(guildId, discordId);
-        return (await users?.findOne({
-          discordId: discordId,
-        })) as User;
-      }
-
-      return user;
     } catch (err) {
       Logger.getInstance().error(
         `Error getting user with discordId: ${discordId}`,
@@ -114,7 +80,7 @@ export class MongoDBClient {
     }
   }
 
-  public async updateUser(guildId: string, update: User): Promise<void> {
+  public async upsertUser(guildId: string, update: User): Promise<void> {
     try {
       const users = this.client.db(config.USERS_DB_NAME).collection(guildId);
 

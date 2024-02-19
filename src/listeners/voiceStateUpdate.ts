@@ -2,11 +2,7 @@ import { Client } from "discord.js";
 import { ExpManager } from "../managers/ExpManager";
 import { ObjectManager } from "../managers/ObjectManager";
 import { MongoDBClient } from "../clients/MongoDBClient";
-
-interface UsersInVoice {
-  id: string;
-  joinedAt: Date;
-}
+import { UsersInVoice, defaultUser } from "../types/User";
 
 const usersInVoice: UsersInVoice[] = [];
 
@@ -15,8 +11,12 @@ async function updateUserTimeSpent(
   userId: string,
   timeSpent: number,
 ): Promise<void> {
-  const user = await MongoDBClient.getInstance().getUser(guildId, userId);
-  if (user === null || user === undefined) return;
+  let user = await MongoDBClient.getInstance().getUser(guildId, userId);
+  if (user === null || user === undefined) {
+    user = { ...defaultUser };
+    user.discordId = userId;
+    await MongoDBClient.getInstance().upsertUser(guildId, user);
+  }
   user.timeSpent += timeSpent;
 
   const manager = ObjectManager.getInstance().getObject(

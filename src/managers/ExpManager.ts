@@ -1,13 +1,8 @@
-import User from "../types/User";
+import User, { UserLevel } from "../types/User";
 import { MessageManager } from "./MessageManager";
 import { ObjectManager } from "./ObjectManager";
 import getBaseLog from "../util/getBaseLog";
 import { MongoDBClient } from "../clients/MongoDBClient";
-
-interface UserLevel {
-  exp: number;
-  level: number;
-}
 
 export class ExpManager {
   constructor() {
@@ -56,6 +51,6 @@ export class ExpManager {
     user.level = level.level;
     user.expTotal += amount;
 
-    MongoDBClient.getInstance().updateUser(guildId, user);
+    MongoDBClient.getInstance().upsertUser(guildId, user);
   }
 }

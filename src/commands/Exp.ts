@@ -1,6 +1,7 @@
 import { CommandInteraction, Client, ApplicationCommandType } from "discord.js";
 import { Command } from "../Command";
 import { MongoDBClient } from "../clients/MongoDBClient";
+import { defaultUser } from "../types/User";
 
 export const Exp: Command = {
   name: "exp",
@@ -14,7 +15,11 @@ export const Exp: Command = {
       interaction.user.id,
     );
 
-    if (!user) {
+    if (user === null || user === undefined) {
+      const newUser = { ...defaultUser };
+      newUser.discordId = interaction.user.id;
+      MongoDBClient.getInstance().upsertUser(interaction.guildId, newUser);
+
       await interaction.followUp({
         ephemeral: true,
         content: "You have no experience!",
