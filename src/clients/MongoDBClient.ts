@@ -80,6 +80,23 @@ export class MongoDBClient {
     }
   }
 
+  public async getTopExp(
+    guildId: string,
+    amount: number,
+  ): Promise<User[] | undefined> {
+    try {
+      const users = this.client.db(config.USERS_DB_NAME).collection(guildId);
+
+      return (await users
+        ?.find()
+        .sort({ expTotal: -1 })
+        .limit(amount)
+        .toArray()) as User[];
+    } catch (err) {
+      Logger.getInstance().error("Error getting top exp", err);
+    }
+  }
+
   public async upsertUser(guildId: string, update: User): Promise<void> {
     try {
       const users = this.client.db(config.USERS_DB_NAME).collection(guildId);
