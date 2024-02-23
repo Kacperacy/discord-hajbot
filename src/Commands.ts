@@ -5,6 +5,7 @@ import { YoStreak } from "./commands/YoStreak";
 import { SetBotChannel } from "./commands/SetBotChannel";
 import { Exp } from "./commands/Exp";
 import { SendLevelUp } from "./commands/SendLevelUp";
+import { ExpHighScore } from "./commands/ExpHighScore";
 
 export const Commands: Command[] = [
   Hello,
@@ -13,4 +14,5 @@ export const Commands: Command[] = [
   SetBotChannel,
   Exp,
   SendLevelUp,
+  ExpHighScore,
 ];
