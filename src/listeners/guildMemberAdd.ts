@@ -8,19 +8,14 @@ export default (client: Client): void => {
       return;
     }
 
-    const channel = client.channels.cache.get("1020783307736236063");
+    const channels = member.guild.channels.cache;
+
+    const channel = channels.find((c) => c.name === "witajka") as TextChannel;
 
     if (!channel) {
-      console.log("nie znalazło kanału");
       return;
-    } else {
-
-      client.on("message", function (message) {
-        message.channel.send(`yo ${member.nickname}!`);
-        console.log("sranie w banie");
-      });
-      
-      console.log("3");
     }
+
+    await channel.send(`yo ${member.nickname}!`);
   });
 };
