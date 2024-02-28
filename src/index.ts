@@ -7,6 +7,7 @@ import messageCreate from "./listeners/messageCreate";
 import voiceStateUpdate from "./listeners/voiceStateUpdate";
 import { ExpManager } from "./managers/ExpManager";
 import { MessageManager } from "./managers/MessageManager";
+import guildMemberAdd from "./listeners/guildMemberAdd";
 
 const client = new Client({
   intents: [
@@ -19,6 +20,7 @@ const client = new Client({
 });
 
 ready(client);
+guildMemberAdd(client);
 interactionCreate(client);
 messageCreate(client);
 voiceStateUpdate(client);
