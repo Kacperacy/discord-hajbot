@@ -48,6 +48,7 @@ async function updateStreak(guildId: string, userId: string) {
   let user = await MongoDBClient.getInstance().getUser(guildId, userId);
   if (user === null || user === undefined) {
     user = { ...defaultUser };
+    user.discordId = userId;
     await MongoDBClient.getInstance().upsertUser(guildId, user);
   }
   const nextDay = new Date(user.yoLastDate);
