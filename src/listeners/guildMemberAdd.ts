@@ -8,9 +8,13 @@ export default (client: Client): void => {
       return;
     }
 
-    const channels = member.guild.channels.cache;
-
-    const channel = channels.find((c) => c.name === "witajka") as TextChannel;
+    let channel =
+      (member.guild.channels.cache.find(
+        (c) => c.name === "witajka",
+      ) as TextChannel) ??
+      member.guild.channels.fetch().then((channels) => {
+        channel = channels.find((c) => c?.name === "witajka") as TextChannel;
+      });
 
     if (!channel) {
       return;
