@@ -12,6 +12,7 @@ export const SetBotChannel: Command = {
   name: "setbotchannel",
   description: "Sets the bot channel to the current channel.",
   type: ApplicationCommandType.ChatInput,
+  defaultMemberPermissions: ["Administrator"],
   run: async (client: Client, interaction: CommandInteraction) => {
     if (!interaction.guildId) return;
 

@@ -2,11 +2,7 @@ import { Client, TextChannel } from "discord.js";
 
 export default (client: Client): void => {
   client.on("guildMemberAdd", async (member) => {
-    if (!client.user || !client.application) {
-      console.log("1");
-
-      return;
-    }
+    if (!client.user || !client.application) return;
 
     let channel =
       (member.guild.channels.cache.find(
@@ -16,10 +12,10 @@ export default (client: Client): void => {
         channel = channels.find((c) => c?.name === "witajka") as TextChannel;
       });
 
-    if (!channel) {
-      return;
-    }
+    if (!channel) return;
 
-    await channel.send(`yo ${member.nickname}!`);
+    if (!member.user.globalName) return;
+
+    await channel.send(`yo ${member.user.globalName}!`);
   });
 };

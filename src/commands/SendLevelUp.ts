@@ -11,6 +11,7 @@ import ServerSettings from "../types/ServerSettings";
 export const SendLevelUp: Command = {
   name: "sendlevelup",
   description: "Turn on or off the level up message",
+  defaultMemberPermissions: ["Administrator"],
   options: [
     {
       name: "state",
