@@ -1,6 +1,5 @@
 import { CronJob } from "cron";
 import { Logger } from "../util/Logger";
-import { ObjectManager } from "../managers/ObjectManager";
 import { MessageManager } from "../managers/MessageManager";
 
 interface Duck {
@@ -30,13 +29,7 @@ export default class sendRandomDuckJob {
         throw new Error("No duck found");
       }
 
-      const manager = ObjectManager.getInstance().getObject(
-        MessageManager.name,
-      ) as MessageManager;
-
-      if (manager) {
-        manager.sendRandomDuck(content.url);
-      }
+      MessageManager.getInstance().sendRandomDuck(content.url);
     } catch (e) {
       Logger.getInstance().error("sendRandomDuckJob handle error", e);
     }

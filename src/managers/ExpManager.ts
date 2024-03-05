@@ -1,15 +1,19 @@
 import User, { UserLevel } from "../types/User";
 import { MessageManager } from "./MessageManager";
-import { ObjectManager } from "./ObjectManager";
 import getBaseLog from "../util/getBaseLog";
 import { MongoDBClient } from "../clients/MongoDBClient";
 
 export class ExpManager {
-  constructor() {
-    ObjectManager.getInstance().registerObjectIfNotExists(
-      this.constructor.name,
-      this,
-    );
+  private static instance: ExpManager;
+
+  constructor() {}
+
+  public static getInstance(): ExpManager {
+    if (!ExpManager.instance) {
+      ExpManager.instance = new ExpManager();
+    }
+
+    return ExpManager.instance;
   }
 
   async levelUp(exp: number, currentLevel: number): Promise<UserLevel> {
@@ -36,15 +40,10 @@ export class ExpManager {
     const level = await this.levelUp(user.exp + amount, user.level);
 
     if (level.level > user.level) {
-      const manager = ObjectManager.getInstance().getObject(
-        MessageManager.name,
-      ) as MessageManager;
-
-      if (manager)
-        manager.sendLevelUpMessage(
-          guildId,
-          `Pozdro dla ciebie <@${user.discordId}>! Właśnie wbiłeś ${level.level} poziom!`,
-        );
+      MessageManager.getInstance().sendLevelUpMessage(
+        guildId,
+        `Pozdro dla ciebie <@${user.discordId}>! Właśnie wbiłeś ${level.level} poziom!`,
+      );
     }
 
     user.exp = level.exp;

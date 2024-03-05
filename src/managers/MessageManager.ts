@@ -1,20 +1,28 @@
 import { Channel, ChannelType, Client } from "discord.js";
-import { ObjectManager } from "./ObjectManager";
 import { MongoDBClient } from "../clients/MongoDBClient";
 
 export class MessageManager {
-  private client: Client;
+  private static client: Client;
+  private static instance: MessageManager;
 
-  constructor(client: Client) {
-    this.client = client;
-    ObjectManager.getInstance().registerObjectIfNotExists(
-      this.constructor.name,
-      this,
-    );
+  constructor() {}
+
+  public static getInstance(): MessageManager {
+    if (!MessageManager.instance) {
+      MessageManager.instance = new MessageManager();
+    }
+
+    return MessageManager.instance;
+  }
+
+  public static setClient(client: Client): void {
+    MessageManager.client = client;
   }
 
   public async sendMessage(channelId: string, content: string): Promise<void> {
-    const channel = (await this.client.channels.fetch(channelId)) as Channel;
+    const channel = (await MessageManager.client.channels.fetch(
+      channelId,
+    )) as Channel;
 
     if (channel && channel.type === ChannelType.GuildText) {
       channel.send(content);
@@ -35,7 +43,9 @@ export class MessageManager {
 
     if (channelId === null || channelId === undefined) return;
 
-    const channel = (await this.client.channels.fetch(channelId)) as Channel;
+    const channel = (await MessageManager.client.channels.fetch(
+      channelId,
+    )) as Channel;
 
     if (channel && channel.type === ChannelType.GuildText) {
       channel.send(content);

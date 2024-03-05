@@ -1,6 +1,5 @@
 import { Client, Message, TextChannel } from "discord.js";
 import { ExpManager } from "../managers/ExpManager";
-import { ObjectManager } from "../managers/ObjectManager";
 import { MongoDBClient } from "../clients/MongoDBClient";
 import { defaultUser } from "../types/User";
 
@@ -33,11 +32,7 @@ async function addMessageExp(guildId: string, message: Message): Promise<void> {
     user.totalMessages += 1;
   }
 
-  const manager = ObjectManager.getInstance().getObject(
-    ExpManager.name,
-  ) as ExpManager;
-
-  await manager.addExp(
+  await ExpManager.getInstance().addExp(
     guildId,
     user,
     Math.floor(message.content.length / 2 + 100),

@@ -1,6 +1,5 @@
 import { Client } from "discord.js";
 import { ExpManager } from "../managers/ExpManager";
-import { ObjectManager } from "../managers/ObjectManager";
 import { MongoDBClient } from "../clients/MongoDBClient";
 import { UsersInVoice, defaultUser } from "../types/User";
 
@@ -19,11 +18,7 @@ async function updateUserTimeSpent(
   }
   user.timeSpent += timeSpent;
 
-  const manager = ObjectManager.getInstance().getObject(
-    ExpManager.name,
-  ) as ExpManager;
-
-  await manager.addExp(guildId, user, timeSpent);
+  await ExpManager.getInstance().addExp(guildId, user, timeSpent);
 }
 
 export default (client: Client): void => {
