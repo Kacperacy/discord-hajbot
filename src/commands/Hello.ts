@@ -6,7 +6,7 @@ export const Hello: Command = {
   description: "Returns a greeting",
   type: ApplicationCommandType.ChatInput,
   run: async (client: Client, interaction: CommandInteraction) => {
-    const content = "Hello there!";
+    const content = "Hello there! I'm a bot!";
 
     await interaction.followUp({
       ephemeral: true,
