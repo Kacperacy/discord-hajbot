@@ -16,7 +16,7 @@ export class MessageManager {
   public async sendMessage(channelId: string, content: string): Promise<void> {
     const channel = (await this.client.channels.fetch(channelId)) as Channel;
 
-    if (channel.type === ChannelType.GuildText) {
+    if (channel && channel.type === ChannelType.GuildText) {
       channel.send(content);
     }
   }
@@ -37,8 +37,12 @@ export class MessageManager {
 
     const channel = (await this.client.channels.fetch(channelId)) as Channel;
 
-    if (channel.type === ChannelType.GuildText) {
+    if (channel && channel.type === ChannelType.GuildText) {
       channel.send(content);
     }
+  }
+
+  public async sendRandomDuck(url: string): Promise<void> {
+    this.sendMessage("1190669915305283615", url);
   }
 }

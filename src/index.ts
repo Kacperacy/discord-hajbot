@@ -8,6 +8,7 @@ import voiceStateUpdate from "./listeners/voiceStateUpdate";
 import { ExpManager } from "./managers/ExpManager";
 import { MessageManager } from "./managers/MessageManager";
 import guildMemberAdd from "./listeners/guildMemberAdd";
+import sendRandomDuckJob from "./jobs/sendRandomDuckJob";
 
 const client = new Client({
   intents: [
@@ -29,3 +30,5 @@ new ExpManager();
 new MessageManager(client);
 
 client.login(config.TOKEN);
+
+new sendRandomDuckJob();
