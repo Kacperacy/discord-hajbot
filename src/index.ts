@@ -28,7 +28,6 @@ voiceStateUpdate(client);
 
 new ExpManager();
 new MessageManager(client);
+new sendRandomDuckJob();
 
 client.login(config.TOKEN);
-
-new sendRandomDuckJob();
