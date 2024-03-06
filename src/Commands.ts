@@ -6,6 +6,7 @@ import { SetBotChannel } from "./commands/SetBotChannel";
 import { Exp } from "./commands/Exp";
 import { SendLevelUp } from "./commands/SendLevelUp";
 import { ExpHighScore } from "./commands/ExpHighScore";
+import { Hobby } from "./commands/Hobby";
 
 export const Commands: Command[] = [
   Hello,
@@ -15,4 +16,5 @@ export const Commands: Command[] = [
   Exp,
   SendLevelUp,
   ExpHighScore,
+  Hobby,
 ];
