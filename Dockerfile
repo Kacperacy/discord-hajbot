@@ -1,13 +1,12 @@
-FROM node:20.11.1
+FROM apline
 
-WORKDIR /usr/src/app
-COPY package.json /usr/src/app/
-COPY package-lock.json /usr/src/app/
+RUN apk add --update nodejs nodejs-npm
+
+WORKDIR /app
+COPY package*.json ./
+COPY package-lock.json ./
 RUN npm ci
-COPY . /usr/src/app
-
-ARG BUILD_TS_ARG
-ENV BUILD_TS=$BUILD_TS_ARG
+COPY . .
 
 ENV NODE_ENV=production
 ENV IS_HOSTED=true
