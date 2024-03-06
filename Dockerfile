@@ -1,4 +1,4 @@
-FROM apline
+FROM alpine
 
 RUN apk add --update nodejs nodejs-npm
 
