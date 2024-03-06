@@ -10,13 +10,19 @@ export default class sendRandomDuckJob {
   cronJob: CronJob;
 
   constructor() {
-    this.cronJob = new CronJob("0 7 * * *", async () => {
-      try {
-        await this.handle();
-      } catch (e) {
-        Logger.getInstance().error("sendRandomDuckJob error", e);
-      }
-    });
+    this.cronJob = new CronJob(
+      "0 7 * * *",
+      async () => {
+        try {
+          await this.handle();
+        } catch (e) {
+          Logger.getInstance().error("sendRandomDuckJob error", e);
+        }
+      },
+      null,
+      true,
+      "Europe/Warsaw",
+    );
   }
 
   public async handle() {
