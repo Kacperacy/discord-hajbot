@@ -1,7 +1,8 @@
-import { Client, Message, TextChannel } from "discord.js";
+import { Message, TextChannel } from "discord.js";
 import { ExpManager } from "../managers/ExpManager";
 import { MongoDBClient } from "../clients/MongoDBClient";
 import { defaultUser } from "../types/User";
+import { BotEvent } from "../types/BotEvent";
 
 const reactions = {
   lewak: "🇵🇱",
@@ -72,12 +73,9 @@ async function updateStreak(guildId: string, userId: string) {
   await MongoDBClient.getInstance().upsertUser(guildId, user);
 }
 
-export default (client: Client): void => {
-  client.on("messageCreate", async (message): Promise<void> => {
-    if (!client.user || !client.application || message.author.bot) {
-      return;
-    }
-
+const event: BotEvent = {
+  name: "messageCreate",
+  run: async (message: Message) => {
     if (message.guildId !== null) await addMessageExp(message.guildId, message);
 
     const channel = message.channel as TextChannel;
@@ -122,5 +120,7 @@ export default (client: Client): void => {
         "https://cdn.discordapp.com/attachments/1020740231156220017/1190031310207598703/LOL.gif",
       );
     }
-  });
+  },
 };
+
+export default event;

@@ -1,13 +1,11 @@
-import { Client } from "discord.js";
+import { Client, Collection } from "discord.js";
 import config from "./config";
+import { join } from "path";
+import { readdirSync } from "fs";
 
-import ready from "./listeners/ready";
-import interactionCreate from "./listeners/interactionCreate";
-import messageCreate from "./listeners/messageCreate";
-import voiceStateUpdate from "./listeners/voiceStateUpdate";
 import { MessageManager } from "./managers/MessageManager";
-import guildMemberAdd from "./listeners/guildMemberAdd";
 import sendRandomDuckJob from "./jobs/sendRandomDuckJob";
+import { SlashCommand } from "./types/SlashCommand";
 
 const client = new Client({
   intents: [
@@ -19,13 +17,17 @@ const client = new Client({
   ],
 });
 
-ready(client);
-guildMemberAdd(client);
-interactionCreate(client);
-messageCreate(client);
-voiceStateUpdate(client);
+client.slashCommands = new Collection<string, SlashCommand>();
 
 MessageManager.setClient(client);
 new sendRandomDuckJob();
+
+const handlersDir = join(__dirname, "./handlers");
+readdirSync(handlersDir).forEach((handler) => {
+  if (!handler.endsWith(".js")) return;
+  import(`${handlersDir}/${handler}`).then((handler) =>
+    handler.default.default(client),
+  );
+});
 
 client.login(config.TOKEN);

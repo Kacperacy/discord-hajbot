@@ -1,16 +1,18 @@
-import { CommandInteraction, Client, ApplicationCommandType } from "discord.js";
-import { Command } from "../Command";
+import { SlashCommandBuilder } from "discord.js";
+import { SlashCommand } from "../types/SlashCommand";
 
-export const Hello: Command = {
-  name: "hello",
-  description: "Returns a greeting",
-  type: ApplicationCommandType.ChatInput,
-  run: async (client: Client, interaction: CommandInteraction) => {
+const Hello: SlashCommand = {
+  command: new SlashCommandBuilder()
+    .setName("hello")
+    .setDescription("Returns a greeting"),
+  run: async (interaction) => {
     const content = "Hello there! I'm a bot!";
 
-    await interaction.followUp({
-      ephemeral: true,
+    await interaction.reply({
+      ephemeral: false,
       content,
     });
   },
 };
+
+export default Hello;

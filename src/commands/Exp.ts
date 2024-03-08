@@ -1,13 +1,13 @@
-import { CommandInteraction, Client, ApplicationCommandType } from "discord.js";
-import { Command } from "../Command";
+import { CommandInteraction, SlashCommandBuilder } from "discord.js";
+import { SlashCommand } from "../types/SlashCommand";
 import { MongoDBClient } from "../clients/MongoDBClient";
 import { defaultUser } from "../types/User";
 
-export const Exp: Command = {
-  name: "exp",
-  description: "Returns a experience abd level of the user",
-  type: ApplicationCommandType.ChatInput,
-  run: async (client: Client, interaction: CommandInteraction) => {
+const Exp: SlashCommand = {
+  command: new SlashCommandBuilder()
+    .setName("exp")
+    .setDescription("Returns a experience abd level of the user"),
+  run: async (interaction: CommandInteraction) => {
     if (!interaction.user.id || !interaction.guildId) return;
 
     const user = await MongoDBClient.getInstance().getUser(
@@ -20,7 +20,7 @@ export const Exp: Command = {
       newUser.discordId = interaction.user.id;
       MongoDBClient.getInstance().upsertUser(interaction.guildId, newUser);
 
-      await interaction.followUp({
+      await interaction.reply({
         ephemeral: true,
         content: "You have no experience!",
       });
@@ -29,9 +29,11 @@ export const Exp: Command = {
 
     const content = `You have ${user.exp} experience and are level ${user.level} with ${user.expTotal} total experience!`;
 
-    await interaction.followUp({
-      ephemeral: true,
+    await interaction.reply({
+      ephemeral: false,
       content,
     });
   },
 };
+
+export default Exp;

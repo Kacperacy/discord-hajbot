@@ -1,12 +1,12 @@
-import { CommandInteraction, Client, ApplicationCommandType } from "discord.js";
-import { Command } from "../Command";
+import { SlashCommandBuilder } from "discord.js";
+import { SlashCommand } from "../types/SlashCommand";
 import { MongoDBClient } from "../clients/MongoDBClient";
 
-export const ExpHighScore: Command = {
-  name: "exp-high-score",
-  description: "Returns a experience abd level of the user",
-  type: ApplicationCommandType.ChatInput,
-  run: async (client: Client, interaction: CommandInteraction) => {
+const ExpHighScore: SlashCommand = {
+  command: new SlashCommandBuilder()
+    .setName("exp-high-score")
+    .setDescription("Returns a experience abd level of the user"),
+  run: async (interaction) => {
     if (!interaction.user.id || !interaction.guildId) return;
 
     const users = await MongoDBClient.getInstance().getTopExp(
@@ -15,7 +15,7 @@ export const ExpHighScore: Command = {
     );
 
     if (users === null || users === undefined) {
-      await interaction.followUp({
+      await interaction.reply({
         ephemeral: true,
         content: "An error has occurred",
       });
@@ -23,7 +23,7 @@ export const ExpHighScore: Command = {
     }
 
     if (users.length === 0) {
-      await interaction.followUp({
+      await interaction.reply({
         ephemeral: true,
         content: "No users found",
       });
@@ -32,18 +32,20 @@ export const ExpHighScore: Command = {
 
     let content = "Top users with the highest exp:\n";
     for (const [index, user] of users.entries()) {
-      let userObj = client.users.cache.get(user.discordId);
+      let userObj = interaction.client.users.cache.get(user.discordId);
 
       if (userObj === undefined) {
-        userObj = await client.users.fetch(user.discordId);
+        userObj = await interaction.client.users.fetch(user.discordId);
       }
 
       content += `${index + 1}. ${userObj?.globalName} -> Level: ${user.level}, current exp: ${user.exp}, total exp: ${user.expTotal}\n`;
     }
 
-    await interaction.followUp({
-      ephemeral: true,
+    await interaction.reply({
+      ephemeral: false,
       content,
     });
   },
 };
+
+export default ExpHighScore;
