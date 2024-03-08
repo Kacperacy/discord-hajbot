@@ -1,27 +1,19 @@
-import {
-  CommandInteraction,
-  Client,
-  ApplicationCommandType,
-  ApplicationCommandOptionType,
-} from "discord.js";
-import { Command } from "../Command";
+import { SlashCommandBuilder } from "discord.js";
+import { SlashCommand } from "../types/SlashCommand";
 import { MongoDBClient } from "../clients/MongoDBClient";
 import ServerSettings from "../types/ServerSettings";
 
-export const SendLevelUp: Command = {
-  name: "sendlevelup",
-  description: "Turn on or off the level up message",
-  defaultMemberPermissions: ["Administrator"],
-  options: [
-    {
-      name: "state",
-      description: "Turn on or off the level up message",
-      type: ApplicationCommandOptionType.Boolean,
-      required: true,
-    },
-  ],
-  type: ApplicationCommandType.ChatInput,
-  run: async (client: Client, interaction: CommandInteraction) => {
+const SendLevelUp: SlashCommand = {
+  command: new SlashCommandBuilder()
+    .setName("sendlevelup")
+    .addBooleanOption((option) =>
+      option
+        .setName("state")
+        .setDescription("Turn on or off the level up message")
+        .setRequired(true),
+    )
+    .setDescription("Turn on or off the level up message"),
+  run: async (interaction) => {
     if (!interaction.guildId) return;
 
     const settings = await MongoDBClient.getInstance().getServerSettings(
@@ -40,13 +32,13 @@ export const SendLevelUp: Command = {
     }
 
     if (!interaction.options.get("state")?.value) {
-      await interaction.followUp({
+      await interaction.reply({
         ephemeral: true,
         content: "Level up message is off!",
       });
       return;
     } else if (interaction.options.get("state")?.value) {
-      await interaction.followUp({
+      await interaction.reply({
         ephemeral: true,
         content: "Level up message is on!",
       });
@@ -54,3 +46,5 @@ export const SendLevelUp: Command = {
     }
   },
 };
+
+export default SendLevelUp;

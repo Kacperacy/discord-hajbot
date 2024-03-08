@@ -1,12 +1,12 @@
-import { CommandInteraction, Client, ApplicationCommandType } from "discord.js";
-import { Command } from "../Command";
+import { SlashCommandBuilder } from "discord.js";
 import { MongoDBClient } from "../clients/MongoDBClient";
+import { SlashCommand } from "../types/SlashCommand";
 
-export const YoHighScore: Command = {
-  name: "yo-high-score",
-  description: "Returns a greeting",
-  type: ApplicationCommandType.ChatInput,
-  run: async (client: Client, interaction: CommandInteraction) => {
+const YoHighScore: SlashCommand = {
+  command: new SlashCommandBuilder()
+    .setName("yo-high-score")
+    .setDescription("Returns a greeting"),
+  run: async (interaction) => {
     if (!interaction.guildId) return;
     const users = await MongoDBClient.getInstance().getTopCount(
       interaction.guildId,
@@ -14,7 +14,7 @@ export const YoHighScore: Command = {
     );
 
     if (users === null || users === undefined) {
-      await interaction.followUp({
+      await interaction.reply({
         ephemeral: true,
         content: "An error has occurred",
       });
@@ -22,7 +22,7 @@ export const YoHighScore: Command = {
     }
 
     if (users.length === 0) {
-      await interaction.followUp({
+      await interaction.reply({
         ephemeral: true,
         content: "No users found",
       });
@@ -31,10 +31,10 @@ export const YoHighScore: Command = {
 
     let content = "Top users with the highest `yo` count:\n";
     for (const [index, user] of users.entries()) {
-      let userObj = client.users.cache.get(user.discordId);
+      let userObj = interaction.client.users.cache.get(user.discordId);
 
       if (userObj === undefined) {
-        userObj = await client.users.fetch(user.discordId);
+        userObj = await interaction.client.users.fetch(user.discordId);
       }
 
       content += `${index + 1}. ${userObj?.globalName} -> Yo count: ${
@@ -42,9 +42,11 @@ export const YoHighScore: Command = {
       }\n`;
     }
 
-    await interaction.followUp({
-      ephemeral: true,
+    await interaction.reply({
+      ephemeral: false,
       content,
     });
   },
 };
+
+export default YoHighScore;

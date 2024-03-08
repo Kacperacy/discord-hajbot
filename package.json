@@ -19,6 +19,7 @@
     "discord.js": "^14.14.1",
     "dotenv": "^16.4.1",
     "mongodb": "^6.3.0",
+    "path": "^0.12.7",
     "winston": "^3.11.0"
   },
   "devDependencies": {

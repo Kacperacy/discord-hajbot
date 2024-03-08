@@ -1,7 +1,8 @@
-import { Client } from "discord.js";
 import { ExpManager } from "../managers/ExpManager";
 import { MongoDBClient } from "../clients/MongoDBClient";
 import { UsersInVoice, defaultUser } from "../types/User";
+import { BotEvent } from "../types/BotEvent";
+import { VoiceState } from "discord.js";
 
 const usersInVoice: UsersInVoice[] = [];
 
@@ -21,17 +22,13 @@ async function updateUserTimeSpent(
   await ExpManager.getInstance().addExp(guildId, user, timeSpent);
 }
 
-export default (client: Client): void => {
-  client.on("voiceStateUpdate", (oldState, newState) => {
+const event: BotEvent = {
+  name: "voiceStateUpdate",
+  run: (oldState: VoiceState, newState: VoiceState) => {
     const member = oldState.member || newState.member;
 
     if (!member) return;
-    if (
-      !client.user ||
-      !client.application ||
-      oldState.member?.user.bot ||
-      newState.member?.user.bot
-    ) {
+    if (oldState.member?.user.bot || newState.member?.user.bot) {
       return;
     }
 
@@ -47,5 +44,7 @@ export default (client: Client): void => {
         usersInVoice.splice(usersInVoice.indexOf(user), 1);
       }
     }
-  });
+  },
 };
+
+export default event;
