@@ -36,7 +36,9 @@ export const Hobby: Command = {
   run: async (client: Client, interaction: CommandInteraction) => {
     const content = "Open case?";
 
-    await interaction.followUp({
+
+    // Show buttons
+    let message = interaction.followUp({
       ephemeral: true,
       content,
       components: [
@@ -55,21 +57,9 @@ export const Hobby: Command = {
       ],
     });
 
-
-    // Inreactions with buttons
-    client.on('interactionCreate', (interaction) => {
-      if(interaction.isButton()) {
-        if(interaction.customId === 'close_button') {
-          interaction.reply('Zamykam');
-        } else {
-          interaction.reply('yo');
-        }
-      }
-    })
-
     // Disable buttons after 5 seconds
-    setTimeout(() => {
-      interaction.followUp({
+    setTimeout(async () => {
+      (await message).edit({
         components: [
           {
             type: 1,
@@ -86,5 +76,16 @@ export const Hobby: Command = {
         ],
       });
     }, 5000);
+
+    // Inreactions with buttons
+    client.on('interactionCreate', (interaction) => {
+      if(interaction.isButton()) {
+        if(interaction.customId === 'close_button') {
+          interaction.reply('Zamykam');
+        } else {
+          interaction.reply('yo');
+        }
+      }
+    })
   },
 };
