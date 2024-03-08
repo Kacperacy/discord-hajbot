@@ -42,7 +42,7 @@ export class ExpManager {
     if (level.level > user.level) {
       MessageManager.getInstance().sendLevelUpMessage(
         guildId,
-        `Pozdro dla ciebie <@${user.discordId}>! Właśnie wbiłeś ${level.level} poziom!`,
+        `Pozdro dla ciebie <@${user.discordId}>! Właśnie wbiłeś/łaś ${level.level} poziom!`,
       );
     }
 
