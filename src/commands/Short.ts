@@ -1,5 +1,6 @@
 import { CommandInteraction, SlashCommandBuilder, bold } from "discord.js";
 import { SlashCommand } from "../types/SlashCommand";
+import { Logger } from "../util/Logger";
 
 interface ShortenResponse {
   shortUrl: string;
@@ -23,14 +24,22 @@ const Short: SlashCommand = {
       return;
     }
 
-    const response = await fetch(`https://kacperacy.ovh/shorten?link=${url}`);
+    try {
+      const response = await fetch(`https://kacperacy.ovh/shorten?link=${url}`);
 
-    const data = (await response.json()) as ShortenResponse;
+      const data = (await response.json()) as ShortenResponse;
 
-    await interaction.reply({
-      ephemeral: false,
-      content: `Shortened URL: ${bold(data.shortUrl)}`,
-    });
+      await interaction.reply({
+        ephemeral: false,
+        content: `Shortened URL: ${bold(data.shortUrl)}`,
+      });
+    } catch (e) {
+      Logger.getInstance().error("Url shortener error", e);
+      await interaction.reply({
+        ephemeral: true,
+        content: "Error while shortening URL!",
+      });
+    }
   },
 };
 
