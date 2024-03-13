@@ -25,7 +25,9 @@ const Short: SlashCommand = {
     }
 
     try {
-      const response = await fetch(`https://kacperacy.ovh/shorten?link=${url}`);
+      const response = await fetch(
+        `https://kacperacy.ovh/api/shorten?link=${url}`,
+      );
 
       const data = (await response.json()) as ShortenResponse;
 
