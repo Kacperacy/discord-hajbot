@@ -47,9 +47,17 @@ async function updateStreak(guildId: string, userId: string) {
     user.discordId = userId;
     await MongoDBClient.getInstance().upsertUser(guildId, user);
   }
-  const nextDay = new Date(user.yoLastDate);
+  const nextDay = new Date(
+    user.yoLastDate.getFullYear(),
+    user.yoLastDate.getMonth(),
+    user.yoLastDate.getDate(),
+  );
   nextDay.setDate(nextDay.getDate() + 1);
-  const nextTwoDays = new Date(user.yoLastDate);
+  const nextTwoDays = new Date(
+    user.yoLastDate.getFullYear(),
+    user.yoLastDate.getMonth(),
+    user.yoLastDate.getDate(),
+  );
   nextTwoDays.setDate(nextTwoDays.getDate() + 2);
   const now = new Date();
 
