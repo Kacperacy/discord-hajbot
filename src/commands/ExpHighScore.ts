@@ -32,13 +32,17 @@ const ExpHighScore: SlashCommand = {
 
     let content = "Top users with the highest exp:\n";
     for (const [index, user] of users.entries()) {
-      let userObj = interaction.client.users.cache.get(user.discordId);
-
-      if (userObj === undefined) {
-        userObj = await interaction.client.users.fetch(user.discordId);
+      let userObj;
+      try {
+        userObj = interaction.client.users.cache.get(user.discordId);
+        if (!userObj) {
+          userObj = await interaction.client.users.fetch(user.discordId);
+        }
+      } catch (error) {
+        content += `${index + 1}. [Unknown User] -> Level: ${user.level}, current exp: ${user.exp}, total exp: ${user.expTotal}\n`;
       }
 
-      content += `${index + 1}. ${userObj?.globalName} -> Level: ${user.level}, current exp: ${user.exp}, total exp: ${user.expTotal}\n`;
+      content += `${index + 1}. ${userObj?.globalName || "Unknown User"} -> Level: ${user.level}, current exp: ${user.exp}, total exp: ${user.expTotal}\n`;
     }
 
     await interaction.reply({
