@@ -1,6 +1,7 @@
 import { SlashCommandBuilder } from "discord.js";
 import { SlashCommand } from "../types/SlashCommand";
 import { MongoDBClient } from "../clients/MongoDBClient";
+import { Logger } from "../util/Logger";
 
 const ExpHighScore: SlashCommand = {
   command: new SlashCommandBuilder()
@@ -39,7 +40,7 @@ const ExpHighScore: SlashCommand = {
           userObj = await interaction.client.users.fetch(user.discordId);
         }
       } catch (error) {
-        content += `${index + 1}. [Unknown User] -> Level: ${user.level}, current exp: ${user.exp}, total exp: ${user.expTotal}\n`;
+        Logger.getInstance().info(`User not found: ${user.discordId}`);
       }
 
       content += `${index + 1}. ${userObj?.globalName || "Unknown User"} -> Level: ${user.level}, current exp: ${user.exp}, total exp: ${user.expTotal}\n`;
