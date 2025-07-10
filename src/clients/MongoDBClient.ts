@@ -40,8 +40,7 @@ export class MongoDBClient {
       })) as User;
     } catch (err) {
       Logger.getInstance().error(
-        `Error getting user with discordId: ${discordId}`,
-        err,
+        `Error getting user with discordId: ${discordId}: ${err}`,
       );
     }
   }
@@ -59,7 +58,7 @@ export class MongoDBClient {
         .limit(amount)
         .toArray()) as User[];
     } catch (err) {
-      Logger.getInstance().error("Error getting top streaks", err);
+      Logger.getInstance().error(`Error getting top streaks: ${err}`);
     }
   }
 
@@ -76,7 +75,7 @@ export class MongoDBClient {
         .limit(amount)
         .toArray()) as User[];
     } catch (err) {
-      Logger.getInstance().error("Error getting top count", err);
+      Logger.getInstance().error(`Error getting top count: ${err}`);
     }
   }
 
@@ -93,7 +92,7 @@ export class MongoDBClient {
         .limit(amount)
         .toArray()) as User[];
     } catch (err) {
-      Logger.getInstance().error("Error getting top exp", err);
+      Logger.getInstance().error(`Error getting top exp: ${err}`);
     }
   }
 
@@ -110,7 +109,7 @@ export class MongoDBClient {
         { upsert: true },
       );
     } catch (err) {
-      Logger.getInstance().error("Error updating user", err);
+      Logger.getInstance().error(`Error updating user: ${err}`);
     }
   }
 
@@ -129,7 +128,7 @@ export class MongoDBClient {
         sendLevelUpMessage: true,
       });
     } catch (err) {
-      Logger.getInstance().error("Error adding server settings", err);
+      Logger.getInstance().error(`Error adding server settings: ${err}`);
     }
   }
 
@@ -148,7 +147,7 @@ export class MongoDBClient {
         guildId: guildId,
       })) as ServerSettings;
     } catch (err) {
-      Logger.getInstance().error("Error getting server settings", err);
+      Logger.getInstance().error(`Error getting server settings: ${err}`);
       return null;
     }
   }
@@ -170,7 +169,7 @@ export class MongoDBClient {
         { upsert: true },
       );
     } catch (err) {
-      Logger.getInstance().error("Error updating server settings", err);
+      Logger.getInstance().error(`Error updating server settings: ${err}`);
     }
   }
 }

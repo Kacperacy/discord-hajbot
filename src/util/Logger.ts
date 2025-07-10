@@ -21,9 +21,11 @@ export class Logger {
     this.handle.add(
       new transports.Console({
         format: format.combine(
-          format.timestamp(),
-          format.errors({ stack: true }),
-          format.simple(),
+          format.colorize({ all: true }),
+          format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+          format.printf(({ timestamp, level, message, stack }) => {
+            return `[${timestamp}] [${level}]: ${stack || message}`;
+          }),
         ),
       }),
     );

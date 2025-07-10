@@ -14,10 +14,7 @@ export default (client: Client) => {
       event.once
         ? client.once(event.name, (...args) => event.run(...args))
         : client.on(event.name, (...args) => event.run(...args));
-      Logger.getInstance().info(
-        "text",
-        `Successfully loaded event ${event.name}`,
-      );
+      Logger.getInstance().info(`Successfully loaded event ${event.name}`);
     });
   });
 };
