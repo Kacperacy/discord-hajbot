@@ -18,7 +18,10 @@ const Exp: SlashCommand = {
     if (user === null || user === undefined) {
       const newUser = { ...defaultUser };
       newUser.discordId = interaction.user.id;
-      MongoDBClient.getInstance().upsertUser(interaction.guildId, newUser);
+      await MongoDBClient.getInstance().upsertUser(
+        interaction.guildId,
+        newUser,
+      );
 
       await interaction.reply({
         flags: 1 << 6,
