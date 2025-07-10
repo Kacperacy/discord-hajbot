@@ -20,7 +20,11 @@ export class Logger {
 
     this.handle.add(
       new transports.Console({
-        format: format.combine(format.timestamp(), format.simple()),
+        format: format.combine(
+          format.timestamp(),
+          format.errors({ stack: true }),
+          format.simple(),
+        ),
       }),
     );
 
@@ -28,7 +32,11 @@ export class Logger {
       new transports.File({
         filename: "logs/error.log",
         level: "error",
-        format: format.combine(format.timestamp(), format.json()),
+        format: format.combine(
+          format.timestamp(),
+          format.errors({ stack: true }),
+          format.json(),
+        ),
       }),
     );
   }
@@ -41,27 +49,27 @@ export class Logger {
   }
 
   log(type: LogTypes, message: string, ...meta: unknown[]): Logger {
-    this.handle.log(type as string, message, meta);
+    this.handle.log(type as string, message, ...meta);
     return this;
   }
 
   debug(message: string, ...meta: unknown[]): Logger {
-    return this.log(LogTypes.DEBUG, message, meta);
+    return this.log(LogTypes.DEBUG, message, ...meta);
   }
 
   info(message: string, ...meta: unknown[]): Logger {
-    return this.log(LogTypes.INFO, message, meta);
+    return this.log(LogTypes.INFO, message, ...meta);
   }
 
   warn(message: string, ...meta: unknown[]): Logger {
-    return this.log(LogTypes.WARN, message, meta);
+    return this.log(LogTypes.WARN, message, ...meta);
   }
 
   error(message: string, ...meta: unknown[]): Logger {
-    return this.log(LogTypes.ERROR, message, meta);
+    return this.log(LogTypes.ERROR, message, ...meta);
   }
 
   crit(message: string, ...meta: unknown[]): Logger {
-    return this.log(LogTypes.ERROR, message, meta);
+    return this.log(LogTypes.ERROR, message, ...meta);
   }
 }

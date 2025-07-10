@@ -1,4 +1,5 @@
 import { Client, Collection } from "discord.js";
+import "./types/Client";
 import config from "./config";
 import { join } from "path";
 import { readdirSync } from "fs";

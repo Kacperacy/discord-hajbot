@@ -101,9 +101,12 @@ export class MongoDBClient {
     try {
       const users = this.client.db(config.USERS_DB_NAME).collection(guildId);
 
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { _id, ...updateWithoutId } = update;
+
       await users?.updateOne(
         { discordId: update.discordId },
-        { $set: update },
+        { $set: updateWithoutId },
         { upsert: true },
       );
     } catch (err) {
