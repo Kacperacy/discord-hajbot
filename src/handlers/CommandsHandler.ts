@@ -12,8 +12,7 @@ export default async (client: Client) => {
   const files = readdirSync(slashCommandsDir);
   for (const file of files) {
     if (!file.endsWith(".js")) return;
-    const command = (await import(`${slashCommandsDir}/${file}`)).default
-      .default;
+    const command = (await import(`${slashCommandsDir}/${file}`)).default;
     slashCommands.push(command.command);
     client.slashCommands.set(command.command.name, command);
   }
