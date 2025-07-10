@@ -3,10 +3,19 @@ import "./types/Client";
 import config from "./config";
 import { join } from "path";
 import { readdirSync } from "fs";
+import { Logger } from "./util/Logger";
 
 import { MessageManager } from "./managers/MessageManager";
 import sendRandomDuckJob from "./jobs/sendRandomDuckJob";
 import { SlashCommand } from "./types/SlashCommand";
+
+process.on("unhandledRejection", (reason) => {
+  Logger.getInstance().error("Unhandled Rejection at:", reason);
+});
+
+process.on("uncaughtException", (err) => {
+  Logger.getInstance().error("Uncaught Exception thrown:", err);
+});
 
 const client = new Client({
   intents: [
