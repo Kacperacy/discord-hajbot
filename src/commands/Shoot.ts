@@ -28,12 +28,11 @@ const Shoot: SlashCommand = {
 
     if (rand <= 5) {
       try {
-        interaction.guild?.members.fetch(target.id).then((member) => {
-          member.timeout(
-            60 * 1000,
-            `${shooter.displayName} cię ustrzelił beka`,
-          );
-        });
+        const member = await interaction.guild?.members.fetch(target.id);
+        await member?.timeout(
+          60 * 1000,
+          `${shooter.displayName} cię ustrzelił beka`,
+        );
       } catch (err) {
         Logger.getInstance().error(`User timeout error: ${err}`);
       }
@@ -46,12 +45,13 @@ const Shoot: SlashCommand = {
 
     if (rand <= 15) {
       try {
-        interaction.guild?.members.fetch(interaction.user.id).then((member) => {
-          member.timeout(
-            60 * 1000,
-            `Nie trafiłeś w ${target.displayName} beka`,
-          );
-        });
+        const member = await interaction.guild?.members.fetch(
+          interaction.user.id,
+        );
+        await member?.timeout(
+          60 * 1000,
+          `Nie trafiłeś w ${target.displayName} beka`,
+        );
       } catch (err) {
         Logger.getInstance().error(`User timeout error: ${err}`);
       }
