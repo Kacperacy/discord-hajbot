@@ -33,13 +33,13 @@ const SendLevelUp: SlashCommand = {
 
     if (!state) {
       await interaction.reply({
-        ephemeral: true,
+        flags: 1 << 6,
         content: "Level up message is off!",
       });
       return;
     } else if (state) {
       await interaction.reply({
-        ephemeral: true,
+        flags: 1 << 6,
         content: "Level up message is on!",
       });
       return;

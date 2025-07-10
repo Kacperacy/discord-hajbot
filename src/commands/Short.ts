@@ -22,7 +22,7 @@ const Short: SlashCommand = {
 
     if (!url) {
       await interaction.reply({
-        ephemeral: true,
+        flags: 1 << 6,
         content: "No URL provided!",
       });
       return;
@@ -36,13 +36,12 @@ const Short: SlashCommand = {
       const data = (await response.json()) as ShortenResponse;
 
       await interaction.reply({
-        ephemeral: false,
         content: `Shortened URL: ${bold(data.shortUrl)}`,
       });
     } catch (e) {
       Logger.getInstance().error(`Url shortener error: ${e}`);
       await interaction.reply({
-        ephemeral: true,
+        flags: 1 << 6,
         content: "Error while shortening URL!",
       });
     }

@@ -12,7 +12,7 @@ const SetBotChannel: SlashCommand = {
     const channel = interaction.channel as TextChannel;
     if (channel === null) {
       await interaction.reply({
-        ephemeral: true,
+        flags: 1 << 6,
         content: "An error has occurred",
       });
       return;
@@ -22,7 +22,7 @@ const SetBotChannel: SlashCommand = {
       botChannelId: channel.id,
     } as ServerSettings);
     await interaction.reply({
-      ephemeral: true,
+      flags: 1 << 6,
       content: `Bot channel has been set to ${channel.name}`,
     });
   },
