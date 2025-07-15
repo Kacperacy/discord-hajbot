@@ -28,6 +28,7 @@ const client = new Client({
 });
 
 client.slashCommands = new Collection<string, SlashCommand>();
+client.cooldowns = new Collection<string, Collection<string, number>>();
 
 MessageManager.setClient(client);
 new sendRandomDuckJob();

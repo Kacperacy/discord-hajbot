@@ -3,6 +3,7 @@ import { SlashCommand } from "../types/SlashCommand";
 import { Logger } from "../util/Logger";
 
 const Shoot: SlashCommand = {
+  cooldown: 10 * 60,
   command: new SlashCommandBuilder()
     .setName("shoot")
     .addUserOption((option) =>
@@ -11,7 +12,7 @@ const Shoot: SlashCommand = {
         .setDescription("Wybierz gracza do ruletki")
         .setRequired(true),
     )
-    .setDescription("Kręcisz ruletą!"),
+    .setDescription("Strzelasz w oponenta"),
   run: async (interaction: ChatInputCommandInteraction) => {
     const target = interaction.options.getUser("target");
     const shooter = interaction.user;
@@ -26,7 +27,7 @@ const Shoot: SlashCommand = {
 
     const rand = Math.floor(Math.random() * 100) + 1;
 
-    if (rand <= 5) {
+    if (rand <= 30) {
       try {
         const member = await interaction.guild?.members.fetch(target.id);
         await member?.timeout(
@@ -43,7 +44,7 @@ const Shoot: SlashCommand = {
       return;
     }
 
-    if (rand <= 15) {
+    if (rand <= 90) {
       try {
         const member = await interaction.guild?.members.fetch(
           interaction.user.id,
@@ -64,7 +65,11 @@ const Shoot: SlashCommand = {
     }
 
     await interaction.reply({
-      content: `${shooter.displayName} strzelał w ${target.displayName} ale trafił w powietrze`,
+      content: `${shooter.displayName} strzelał w ${target.displayName} ale trafił w powietrze `,
+    });
+
+    await interaction.followUp({
+      content: `https://cdn.discordapp.com/attachments/1392806750687592528/1393549257264463992/dawid-jasper.gif`,
     });
   },
 };

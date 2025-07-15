@@ -4,5 +4,6 @@ import { SlashCommand } from "./SlashCommand";
 declare module "discord.js" {
   export interface Client {
     slashCommands: Collection<string, SlashCommand>;
+    cooldowns?: Collection<string, Collection<string, number>>;
   }
 }
