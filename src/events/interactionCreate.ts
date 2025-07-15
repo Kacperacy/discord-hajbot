@@ -1,4 +1,4 @@
-import { Interaction } from "discord.js";
+import { Interaction, TextChannel, EmbedBuilder, Collection } from "discord.js";
 import { BotEvent } from "../types/BotEvent";
 import { Logger } from "../util/Logger";
 
