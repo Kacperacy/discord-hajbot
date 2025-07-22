@@ -55,4 +55,8 @@ export class MessageManager {
   public async sendRandomDuck(url: string): Promise<void> {
     this.sendMessage("1190669915305283615", url);
   }
+
+  public async sendNewDayInfo(content: string): Promise<void> {
+    this.sendMessage("1397167328038228138", content);
+  }
 }

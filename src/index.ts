@@ -5,6 +5,7 @@ import { readdirSync } from "fs";
 
 import { MessageManager } from "./managers/MessageManager";
 import sendRandomDuckJob from "./jobs/sendRandomDuckJob";
+import sendNewDayInfoJob from "./jobs/sendNewDayInfoJob";
 import { SlashCommand } from "./types/SlashCommand";
 
 const client = new Client({
@@ -21,6 +22,7 @@ client.slashCommands = new Collection<string, SlashCommand>();
 
 MessageManager.setClient(client);
 new sendRandomDuckJob();
+new sendNewDayInfoJob();
 
 const handlersDir = join(__dirname, "./handlers");
 readdirSync(handlersDir).forEach((handler) => {

@@ -23,30 +23,26 @@ export default class sendNewDayInfoJob {
 
   public async handle() {
     try {
-      // Hardcoded MP4s for each weekday
+      // Hardcoded MP4s for each weekday for now gifs
       const weekdayMp4s: { [key: number]: string } = {
-        0: "https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.mp4", // Sunday
-        1: "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.mp4", // Monday
-        2: "https://media.giphy.com/media/3o7aD2saalBwwftBIY/giphy.mp4", // Tuesday
-        3: "https://media.giphy.com/media/xT0GqFh1howpF6fG3G/giphy.mp4", // Wednesday
-        4: "https://media.giphy.com/media/3o6Zt8zb1Pp2v3nRkQ/giphy.mp4", // Thursday
-        5: "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.mp4", // Friday
-        6: "https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.mp4", // Saturday
+        0: "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExcjZnbGdhNndxNzNtenBxMTFjN3hsemR4eTZqNDJlaG9vNjY5NDkwZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/4P8hjejLHjxaL2FDuK/giphy.gif", // Sunday
+        1: "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExYTJkcHkyZGtpYW12dmFtcjB0a2N5b201d25qbGJ2NHlhMzZ2Y3k4aiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LrZ2TyqQCy6saT0OIR/giphy.gif", // Monday
+        2: "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExcmxwMmxtZmE4ZXNreDB0Nzh1cHRwOXFzZHoya2Q0OWFwZWkxZW80OSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/iEA88xFPjCHScm6Syg/giphy.gif", // Tuesday
+        3: "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExMW93MmJzYWF6a2txdWIwNDdmenBheTV6d3JnNWVyMWZ4ZWpoNGVtNCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/gpw0UnPPZEfTHwx4xc/giphy.gif", // Wednesday
+        4: "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExcXl4aWtzM2V6MDF3Z3B4dWdrb3l4b2JkYnJmanpuanUzcnlyaGd3OCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/jsRQMrZDW7x50JPKrm/giphy.gif", // Thursday
+        5: "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExaTVjMWVrdHA0cDQ5YnU2MWJqdDJ5aXJ0dnU2enBxaTFoaW9ibHVqZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/1x2Vv2luqAEJd0nbO1/giphy.gif", // Friday
+        6: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzd3ZGh3bnp4ZmZvbDBuamplNTg0MzE2Yzl3dTVqZnptdXlpbnU4MCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/IKCIKZsWrxE8aAP7WH/giphy.gif", // Saturday
       };
 
       const today = new Date().getDay(); // 0 (Sunday) to 6 (Saturday)
-      const mp4Url = weekdayMp4s[today] || "https://media.giphy.com/media/3o6Zt481isNVuQI1l6/giphy.gif";
+      const mp4Url = weekdayMp4s[today] || "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExZnRqNmpncHhwenRjMTMxamNyMGUxanB4d2RyamttaGs0cnAxOWhqZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/1RkDDoIVs3ntm/giphy.gif";
 
-      // You may want to customize the message content
-      const content = `JEST : \n${mp4Url}`;
+      // First, send the text message
+      const textContent = "JEST :";
+      await MessageManager.getInstance().sendNewDayInfo(textContent);
 
-      // Send the message to the appropriate channel(s)
-      // You may want to loop through all servers or channels as needed
-      // For demonstration, we'll assume a method sendMessage exists and a channelId is known
-      // Replace 'YOUR_CHANNEL_ID' with the actual channel ID or fetch dynamically
-
-      const channelId = "1195509728378368080";
-      await MessageManager.getInstance().sendMessage(channelId, content);
+      // Then, send the gif/mp4 link
+      await MessageManager.getInstance().sendNewDayInfo(mp4Url);
     } catch (e) {
       Logger.getInstance().error("sendNewDayInfoJob handle error", e);
     }
