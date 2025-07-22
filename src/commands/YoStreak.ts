@@ -17,7 +17,7 @@ const YoStreak: SlashCommand = {
 
     if (users === null || users === undefined) {
       await interaction.reply({
-        ephemeral: true,
+        flags: 1 << 6,
         content: "An error has occurred",
       });
       return;
@@ -25,7 +25,7 @@ const YoStreak: SlashCommand = {
 
     if (users.length === 0) {
       await interaction.reply({
-        ephemeral: true,
+        flags: 1 << 6,
         content: "No users found",
       });
       return;
@@ -45,7 +45,6 @@ const YoStreak: SlashCommand = {
     }
 
     await interaction.reply({
-      ephemeral: false,
       content,
     });
   },

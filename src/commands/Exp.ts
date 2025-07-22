@@ -18,10 +18,13 @@ const Exp: SlashCommand = {
     if (user === null || user === undefined) {
       const newUser = { ...defaultUser };
       newUser.discordId = interaction.user.id;
-      MongoDBClient.getInstance().upsertUser(interaction.guildId, newUser);
+      await MongoDBClient.getInstance().upsertUser(
+        interaction.guildId,
+        newUser,
+      );
 
       await interaction.reply({
-        ephemeral: true,
+        flags: 1 << 6,
         content: "You have no experience!",
       });
       return;
@@ -30,7 +33,6 @@ const Exp: SlashCommand = {
     const content = `You have ${user.exp} experience and are level ${user.level} with ${user.expTotal} total experience!`;
 
     await interaction.reply({
-      ephemeral: false,
       content,
     });
   },

@@ -1,12 +1,22 @@
 import { Client, Collection } from "discord.js";
+import "./types/Client";
 import config from "./config";
 import { join } from "path";
 import { readdirSync } from "fs";
+import { Logger } from "./util/Logger";
 
 import { MessageManager } from "./managers/MessageManager";
 import sendRandomDuckJob from "./jobs/sendRandomDuckJob";
 import sendNewDayInfoJob from "./jobs/sendNewDayInfoJob";
 import { SlashCommand } from "./types/SlashCommand";
+
+process.on("unhandledRejection", (reason) => {
+  Logger.getInstance().error("Unhandled Rejection at:", reason);
+});
+
+process.on("uncaughtException", (err) => {
+  Logger.getInstance().error("Uncaught Exception thrown:", err);
+});
 
 const client = new Client({
   intents: [
@@ -19,6 +29,7 @@ const client = new Client({
 });
 
 client.slashCommands = new Collection<string, SlashCommand>();
+client.cooldowns = new Collection<string, Collection<string, number>>();
 
 MessageManager.setClient(client);
 new sendRandomDuckJob();

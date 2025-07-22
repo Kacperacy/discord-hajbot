@@ -9,7 +9,6 @@ const Hello: SlashCommand = {
     const content = "Hello there! I'm a bot!";
 
     await interaction.reply({
-      ephemeral: false,
       content,
     });
   },
